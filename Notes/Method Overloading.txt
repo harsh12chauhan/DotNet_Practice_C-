@@ -1,0 +1,235 @@
+C# Fundamentals — Method Overloading
+
+In C#, method overloading means having multiple methods with the same name but different parameter lists.
+
+The compiler decides which method to call based on the arguments you provide.
+
+1. Basic example
+class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    public int Add(int a, int b, int c)
+    {
+        return a + b + c;
+    }
+}
+
+Now:
+
+Calculator calc = new Calculator();
+
+Console.WriteLine(calc.Add(10, 20));       // 30
+Console.WriteLine(calc.Add(10, 20, 30));   // 60
+
+Both methods are called Add, but their parameter lists are different.
+
+That's overloading.
+
+2. What can be different?
+
+The parameter list can differ by:
+
+Number of parameters
+void Print(int a)
+{
+}
+
+void Print(int a, int b)
+{
+}
+Parameter types
+void Print(int value)
+{
+}
+
+void Print(string value)
+{
+}
+Order of parameter types
+void Display(int a, string b)
+{
+}
+
+void Display(string a, int b)
+{
+}
+
+These are all valid overloads.
+
+3. Return type alone is NOT enough
+
+This is a very common interview question.
+
+❌ This is not valid overloading:
+
+int Add(int a, int b)
+{
+    return a + b;
+}
+
+double Add(int a, int b)
+{
+    return a + b;
+}
+
+Why?
+
+Because the parameter list is exactly the same.
+
+The compiler cannot use only the return type to distinguish methods.
+
+So remember:
+
+Method overloading depends on the parameter list, not the return type.
+
+4. Overloading with different types
+class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    public double Add(double a, double b)
+    {
+        return a + b;
+    }
+}
+
+Now:
+
+Calculator calc = new Calculator();
+
+Console.WriteLine(calc.Add(10, 20));
+Console.WriteLine(calc.Add(10.5, 20.5));
+
+The compiler chooses the appropriate method based on the arguments.
+
+This is called compile-time polymorphism or static polymorphism.
+
+5. Why do we use overloading?
+
+Imagine you have:
+
+CalculateArea()
+CalculateArea(int radius)
+CalculateArea(int length, int width)
+
+Without overloading, you'd need different names:
+
+CalculateCircleArea()
+CalculateRectangleArea()
+CalculateSomethingElse()
+
+Overloading lets related operations share a meaningful name.
+
+So the idea is:
+
+Same operation → same method name → different inputs.
+
+6. Important distinction: parameters vs arguments
+
+This is worth remembering for interviews.
+
+int Add(int a, int b)
+
+a and b are parameters.
+
+When you call:
+
+Add(10, 20);
+
+10 and 20 are arguments.
+
+The compiler uses the arguments to determine which overloaded method should be called.
+
+7. A slightly more realistic example
+class Logger
+{
+    public void Log(string message)
+    {
+        Console.WriteLine(message);
+    }
+
+    public void Log(string message, int level)
+    {
+        Console.WriteLine($"Level {level}: {message}");
+    }
+
+    public void Log(string message, Exception ex)
+    {
+        Console.WriteLine($"{message}: {ex.Message}");
+    }
+}
+
+You can now do:
+
+Logger logger = new Logger();
+
+logger.Log("Application started");
+
+logger.Log("Something went wrong", 2);
+
+logger.Log("Database error", new Exception("Connection failed"));
+
+Same operation — Log — but different input requirements.
+
+8. One important C# interview trap
+
+Consider:
+
+void Test(int x)
+{
+}
+
+void Test(long x)
+{
+}
+
+Then:
+
+Test(10);
+
+Which one is called?
+
+👉 Test(int x)
+
+Because 10 is normally treated as an int literal, so the exact match is preferred.
+
+But:
+
+long number = 10;
+
+Test(number);
+
+calls:
+
+Test(long x)
+
+Understanding overload resolution becomes increasingly important as we move toward advanced C#.
+
+🧠 Interview-level summary
+
+If an interviewer asks:
+
+"What is method overloading in C#?"
+
+A good answer would be:
+
+"Method overloading is a compile-time polymorphism feature in C# where multiple methods can have the same name but different parameter lists. The compiler determines which method to invoke based on the number, types, and order of the arguments. Changing only the return type is not sufficient for method overloading."
+
+That's a solid interview answer.
+
+What you should remember
+Concept	Valid?
+Same name + different number of parameters	✅
+Same name + different parameter types	✅
+Same name + different parameter order	✅
+Same name + different return type only	❌
+Same name + same parameters	❌
+Decided at compile time	✅
+Also called static/compile-time polymorphism	✅

@@ -1,0 +1,75 @@
+Upcasting ----------------
+
+You've already done this:
+
+Employee employee = new Developer(...);
+
+This is called upcasting.
+
+Developer
+    ↑
+    │ upcast
+    │
+Employee
+
+It's safe because:
+
+Developer IS-A Employee.
+
+You don't need an explicit cast.
+
+Downcasting -----------------
+
+Going the other way:
+
+Employee employee = new Developer(...);
+
+Developer developer = (Developer)employee;
+
+This is downcasting.
+
+But it's potentially dangerous.
+
+For example:
+
+Employee employee = new Manager(...);
+
+Developer developer = (Developer)employee;
+
+❌ Runtime exception.
+
+Because the actual object is a Manager, not a Developer.
+
+8. is ----------------
+
+Use is to check the actual type:
+
+if (employee is Developer)
+{
+    Console.WriteLine("This is a developer");
+}
+
+Modern C# commonly uses pattern matching:
+
+if (employee is Developer developer)
+{
+    developer.DisplayInfo();
+}
+
+This checks and creates the typed variable in one step.
+
+9. as ----------------
+
+as attempts a conversion and returns null if it fails.
+
+Developer developer = employee as Developer;
+
+if (developer != null)
+{
+    developer.DisplayInfo();
+}
+
+Compare: (Developer)employee
+can throw an exception if invalid.
+
+Whereas: employee as Developer => returns null.

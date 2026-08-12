@@ -1,0 +1,1010 @@
+C# Inheritance — Revision
+
+The simplest definition:
+
+Inheritance allows one class to acquire/reuse members of another class.
+
+We have:
+
+Parent/Base class
+       ↑
+       │ inherits
+       │
+Child/Derived class
+
+For example:
+
+class Animal
+{
+    public string Name { get; set; }
+
+    public void Eat()
+    {
+        Console.WriteLine("Animal is eating");
+    }
+}
+
+class Dog : Animal
+{
+    public void Bark()
+    {
+        Console.WriteLine("Dog is barking");
+    }
+}
+
+Here:
+
+Animal → Base/Parent class
+Dog    → Derived/Child class
+
+The : means inheritance:
+
+class Dog : Animal
+1. What does the child inherit?
+
+Because Dog inherits Animal:
+
+Dog dog = new Dog();
+
+dog.Name = "Tommy";
+dog.Eat();
+dog.Bark();
+
+Name and Eat() came from Animal.
+
+Bark() belongs specifically to Dog.
+
+So:
+
+Dog
+│
+├── Name       ← inherited
+├── Eat()      ← inherited
+└── Bark()     ← Dog's own member
+
+This is the basic idea of inheritance.
+
+2. Why use inheritance?
+
+Suppose you have:
+
+class Dog
+{
+    public string Name { get; set; }
+
+    public void Eat()
+    {
+        Console.WriteLine("Eating");
+    }
+
+    public void Bark()
+    {
+        Console.WriteLine("Barking");
+    }
+}
+
+And:
+
+class Cat
+{
+    public string Name { get; set; }
+
+    public void Eat()
+    {
+        Console.WriteLine("Eating");
+    }
+
+    public void Meow()
+    {
+        Console.WriteLine("Meowing");
+    }
+}
+
+There's duplication:
+
+Dog → Name, Eat()
+Cat → Name, Eat()
+
+We can extract common functionality:
+
+class Animal
+{
+    public string Name { get; set; }
+
+    public void Eat()
+    {
+        Console.WriteLine("Eating");
+    }
+}
+
+class Dog : Animal
+{
+    public void Bark()
+    {
+        Console.WriteLine("Barking");
+    }
+}
+
+class Cat : Animal
+{
+    public void Meow()
+    {
+        Console.WriteLine("Meowing");
+    }
+}
+
+Now:
+
+              Animal
+             /      \
+            /        \
+          Dog        Cat
+           │          │
+        Bark()      Meow()
+
+Both reuse Name and Eat().
+
+3. public, private, and inheritance
+
+This is extremely important.
+
+Consider:
+
+class Animal
+{
+    public string Name;
+    private int age;
+}
+
+Then:
+
+class Dog : Animal
+{
+    public void Display()
+    {
+        Console.WriteLine(Name); // ✅
+        Console.WriteLine(age);  // ❌
+    }
+}
+
+Why?
+
+Because private members belong only to the class that declares them.
+
+So:
+
+Animal
+├── public Name  → Dog can access
+└── private age  → Dog cannot directly access
+4. protected
+
+This is where protected becomes useful.
+
+class Animal
+{
+    protected int age;
+}
+
+Now:
+
+class Dog : Animal
+{
+    public void SetAge(int value)
+    {
+        age = value; // ✅
+    }
+}
+
+protected means roughly:
+
+Accessible inside the class and its derived classes.
+
+So:
+
+public     → broadly accessible
+private    → containing class only
+protected  → containing class + derived classes
+
+You'll use protected occasionally, but don't overuse it. We'll discuss why when we get to proper OOP design.
+
+5. Constructor and inheritance
+
+This is an important connection to the constructor topic you just learned.
+
+Suppose:
+
+class Animal
+{
+    public Animal()
+    {
+        Console.WriteLine("Animal constructor");
+    }
+}
+
+class Dog : Animal
+{
+    public Dog()
+    {
+        Console.WriteLine("Dog constructor");
+    }
+}
+
+Now:
+
+Dog dog = new Dog();
+
+Output:
+
+Animal constructor
+Dog constructor
+Why?
+
+When a Dog is created, its base Animal part must be initialized first.
+
+Think:
+
+new Dog()
+   ↓
+Animal constructor
+   ↓
+Dog constructor
+   ↓
+Dog object ready
+
+This is very important.
+
+6. Calling a specific base constructor
+
+Suppose:
+
+class Animal
+{
+    public string Name { get; }
+
+    public Animal(string name)
+    {
+        Name = name;
+    }
+}
+
+Then:
+
+class Dog : Animal
+{
+    public Dog(string name) : base(name)
+    {
+    }
+}
+
+Here:
+
+: base(name)
+
+means:
+
+Call the constructor of the base class.
+
+So:
+
+Dog dog = new Dog("Tommy");
+
+flows like:
+
+Dog("Tommy")
+     ↓
+base("Tommy")
+     ↓
+Animal("Tommy")
+     ↓
+Dog constructor body
+
+Notice the similarity:
+
+this(...)
+
+means:
+
+Call another constructor in the same class.
+
+While:
+
+base(...)
+
+means:
+
+Call a constructor in the parent/base class.
+
+That's a very useful distinction.
+
+7. Method overriding
+
+Now we get to one of the most important inheritance concepts.
+
+Suppose:
+
+class Animal
+{
+    public virtual void MakeSound()
+    {
+        Console.WriteLine("Animal sound");
+    }
+}
+
+virtual means:
+
+A derived class is allowed to provide its own implementation.
+
+Then:
+
+class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Bark");
+    }
+}
+
+Now:
+
+Dog dog = new Dog();
+
+dog.MakeSound();
+
+Output:
+
+Bark
+
+The child has overridden the parent's implementation.
+
+8. virtual + override
+
+Remember this pair:
+
+Parent
+public virtual void MakeSound()
+{
+}
+Child
+public override void MakeSound()
+{
+}
+
+So:
+
+Base class
+    ↓
+virtual
+    ↓
+Derived class
+    ↓
+override
+
+This is called method overriding.
+
+9. Overloading vs overriding
+
+This is a very common interview question, especially since we just studied overloading.
+
+Overloading
+
+Same class usually, same method name, different parameters:
+
+Calculate(int a, int b)
+Calculate(double a, double b)
+
+Compile-time polymorphism.
+
+Overriding
+
+Parent-child relationship, same method signature:
+
+Animal.MakeSound()
+Dog.MakeSound()
+
+Runtime polymorphism.
+
+Overloading	Overriding
+Same method name	Same method signature
+Different parameters	Same parameters
+Usually same class	Requires inheritance
+Compile-time	Runtime
+virtual not required	virtual + override normally used
+10. base keyword
+
+base is used to access members of the base class.
+
+For example:
+
+class Animal
+{
+    public virtual void Eat()
+    {
+        Console.WriteLine("Animal eating");
+    }
+}
+
+class Dog : Animal
+{
+    public override void Eat()
+    {
+        base.Eat();
+        Console.WriteLine("Dog eating");
+    }
+}
+
+Calling:
+
+dog.Eat();
+
+produces:
+
+Animal eating
+Dog eating
+
+So:
+
+base.Eat();
+
+means:
+
+Call the base class's implementation.
+
+11. Can a class inherit from multiple classes?
+
+No.
+
+C# doesn't support multiple class inheritance.
+
+This is invalid:
+
+class Dog : Animal, Mammal
+{
+}
+
+A class can directly inherit from only one class.
+
+However, C# does support implementing multiple interfaces:
+
+class Dog : Animal, IRunnable, ISwimmable
+{
+}
+
+We'll cover interfaces later.
+
+This distinction becomes very important when we get to SOLID.
+
+12. sealed
+
+You can prevent inheritance using sealed.
+
+sealed class Animal
+{
+}
+
+Now:
+
+class Dog : Animal
+{
+}
+
+❌ Not allowed.
+
+You can also seal an overridden method:
+
+public sealed override void MakeSound()
+{
+}
+
+This means further derived classes cannot override that method.
+
+13. Object inheritance
+
+There's one inheritance relationship you should know:
+
+Every C# class ultimately derives from:
+
+System.Object
+
+So:
+
+class Animal
+{
+}
+
+is conceptually:
+
+class Animal : object
+{
+}
+
+That's why every object has methods such as:
+
+ToString()
+Equals()
+GetHashCode()
+GetType()
+
+Remember your ToString() implementation from the previous assignment?
+
+public override string ToString()
+{
+    return ...
+}
+
+You were actually overriding a method inherited from System.Object.
+
+That's a nice connection between the topics we've already covered.
+
+14. Is inheritance always good?
+
+No.
+
+This is particularly important because we're also trying to learn SOLID.
+
+Don't create inheritance just because two classes have some common properties.
+
+You should generally have a genuine "is-a" relationship.
+
+Good:
+
+Dog IS-A Animal
+Car IS-A Vehicle
+Manager IS-A Employee
+
+Questionable:
+
+Engine IS-A Car ❌
+
+An engine is part of a car, not a type of car.
+
+That's composition rather than inheritance.
+
+We'll get into inheritance vs composition later because it's an important interview topic.
+
+🧠 Mental model
+
+Keep this picture in your head:
+
+                Animal
+              /        \
+             /          \
+          Dog            Cat
+           │              │
+        Bark()          Meow()
+
+The child gets reusable functionality from the parent.
+
+And:
+
+this(...) → another constructor in SAME class
+base(...) → constructor/member in PARENT class
+
+And:
+
+virtual → parent allows overriding
+override → child replaces parent's implementation
+🎯 Interview Cheat Sheet
+
+Inheritance:
+
+Mechanism by which a derived class acquires accessible members and behavior from a base class.
+
+Syntax:
+
+class Dog : Animal
+{
+}
+
+Base constructor:
+
+public Dog(string name) : base(name)
+{
+}
+
+Overriding:
+
+// Base
+public virtual void MakeSound() { }
+
+// Derived
+public override void MakeSound() { }
+
+Key access modifiers:
+
+public     → accessible broadly
+private    → containing class
+protected  → containing + derived classes
+
+Multiple class inheritance: ❌ Not supported in C#.
+
+Every class ultimately derives from: System.Object.
+
+One thing I especially want you to remember
+
+Don't think:
+
+"Inheritance means copying properties from parent."
+
+Think:
+
+"The derived type is a specialized form of the base type and can reuse/extend its behavior."
+
+That's a much better understanding for interviews and real-world design.
+
+
+I have this 2 questions
+
+can I inherit static class ?
+System.Object is a class ? and I thing system is a static class and it has static method Object ?
+
+Yes, both are good questions. The second one reveals an important distinction in how .NET is organized.
+
+1. Can I inherit a static class?
+
+No.
+
+A static class cannot be used as a base class.
+
+static class Animal
+{
+}
+
+This is invalid:
+
+class Dog : Animal   // ❌
+{
+}
+Why?
+
+A static class cannot be instantiated:
+
+Animal a = new Animal(); // ❌
+
+And inheritance is based on an object/type relationship. A derived class would need to represent a specialized form of the base type.
+
+A static class is designed for static functionality only, such as:
+
+static class Calculator
+{
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
+}
+
+So remember:
+
+Static class → cannot be instantiated → cannot be inherited.
+
+2. Is System.Object a class?
+
+Yes! Exactly.
+
+System.Object is a class provided by .NET.
+
+In fact, it is the ultimate base class of all C# classes.
+
+For example:
+
+class Employee
+{
+}
+
+is effectively:
+
+class Employee : System.Object
+{
+}
+
+You can also write:
+
+class Employee : object
+{
+}
+
+object is simply a C# alias for System.Object.
+
+So:
+
+object
+   ↓
+System.Object
+
+They're referring to the same type.
+
+3. But System is NOT a static class
+
+This is the part to correct.
+
+You said:
+
+"System is a static class and it has static method Object"
+
+❌ That's not how it works.
+
+Think of System as a namespace.
+
+System
+│
+├── Object       ← class
+├── String       ← class
+├── Math         ← class
+├── Console      ← class
+├── DateTime     ← struct
+├── Exception    ← class
+└── ...
+
+A namespace is basically a way of organizing types.
+
+So:
+
+System.Object
+
+means:
+
+The Object type inside the System namespace.
+
+It does not mean:
+
+A static method called Object inside System.
+
+4. Then what is System.Console?
+
+Console is a class inside the System namespace.
+
+System.Console.WriteLine("Hello");
+
+Conceptually:
+
+System             ← namespace
+   │
+   └── Console      ← class
+          │
+          └── WriteLine()  ← static method
+
+That's why you can do:
+
+Console.WriteLine("Hello");
+
+without creating:
+
+new Console()
+
+because WriteLine() is a static method.
+
+5. What about System.Math?
+
+Same idea:
+
+System              ← namespace
+   │
+   └── Math          ← static class
+        │
+        ├── Max()
+        ├── Min()
+        ├── Abs()
+        └── Sqrt()
+
+So:
+
+Math.Sqrt(25);
+
+works because Math is a static class.
+
+6. Compare these carefully
+System
+System
+ ↓
+Namespace
+System.Object
+System
+ ↓
+Object
+ ↓
+Class
+System.Math
+System
+ ↓
+Math
+ ↓
+Static class
+System.Console
+System
+ ↓
+Console
+ ↓
+Class
+ ↓
+WriteLine()
+ ↓
+Static method
+🧠 Very important hierarchy
+
+Keep this distinction in your head:
+
+Namespace
+   │
+   ├── Class
+   │    ├── Instance methods
+   │    ├── Static methods
+   │    └── Properties
+   │
+   ├── Static class
+   │    └── Static members
+   │
+   ├── Struct
+   │
+   ├── Interface
+   │
+   └── Enum
+
+A namespace isn't a class.
+
+A class isn't necessarily static.
+
+A static class isn't a method.
+
+And System.Object is a class, not a method.
+
+One interview-quality answer
+
+If asked:
+
+"What is System.Object?"
+
+Say:
+
+"System.Object is the root base class of the .NET type hierarchy. Every C# class ultimately derives from it, either directly or indirectly. object is the C# alias for System.Object."
+
+
+
+what are the types of inheriatance?
+
+In C#, inheritance is generally discussed in 5 types, but there's an important C#-specific point: C# does not support multiple inheritance through classes.
+
+1. Single Inheritance ✅
+
+One child inherits from one parent.
+
+Animal
+   ↓
+ Dog
+class Animal
+{
+}
+
+class Dog : Animal
+{
+}
+
+This is the most basic form.
+
+2. Multilevel Inheritance ✅
+
+Inheritance continues through multiple levels.
+
+Animal
+   ↓
+Mammal
+   ↓
+Dog
+class Animal
+{
+}
+
+class Mammal : Animal
+{
+}
+
+class Dog : Mammal
+{
+}
+
+So Dog indirectly inherits from Animal.
+
+3. Hierarchical Inheritance ✅
+
+Multiple classes inherit from the same parent.
+
+          Animal
+         /      \
+       Dog      Cat
+class Animal
+{
+}
+
+class Dog : Animal
+{
+}
+
+class Cat : Animal
+{
+}
+
+You just implemented this in your assignment:
+
+             Employee
+             /      \
+       Developer    Manager
+4. Multiple Inheritance ❌ through classes
+
+Multiple parents → one child:
+
+Animal      Machine
+    \        /
+      Robot
+
+C# doesn't allow this with classes:
+
+class Robot : Animal, Machine
+{
+}
+
+❌ Compile-time error.
+
+But C# supports multiple interfaces
+interface IWalkable
+{
+}
+
+interface ISwimmable
+{
+}
+
+class Robot : IWalkable, ISwimmable
+{
+}
+
+So:
+
+Multiple class inheritance → ❌
+Multiple interface implementation → ✅
+
+We'll study interfaces later.
+
+5. Hybrid Inheritance
+
+Hybrid inheritance is a combination of multiple inheritance types.
+
+For example:
+
+          Animal
+         /      \
+       Dog      Cat
+        |
+     SpecialDog
+
+This combines hierarchical + multilevel inheritance.
+
+C# doesn't support arbitrary hybrid inheritance through classes if it requires multiple class inheritance.
+
+However, combinations involving interfaces are possible.
+
+🧠 Easy way to remember
+Type	C# classes
+Single	✅
+Multilevel	✅
+Hierarchical	✅
+Multiple	❌
+Hybrid	❌ through multiple classes
+The important interview point
+
+If an interviewer asks:
+
+"Does C# support multiple inheritance?"
+
+Don't simply say:
+
+❌ No.
+
+Say:
+
+"C# does not support multiple inheritance of classes, but it supports implementing multiple interfaces."
+
+For example:
+
+class Developer : Employee, IProgrammer, ITeamMember
+{
+}
+
+Here Employee is the one base class, while IProgrammer and ITeamMember are interfaces.
