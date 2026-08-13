@@ -37,6 +37,15 @@ public double Area => Length * Width;
 Property => A property provides controlled access to an object's data and can encapsulate reading, writing, validation, or computed values.
 
 
+Quick table
+Combination		Overload allowed?
+int vs ref int		✅
+int vs out int		✅
+int vs in int		❌
+ref int vs out int	❌
+ref int vs in int	❌
+out int vs in int	❌
+
 # Static ==================================
 
 Concept	Key point
@@ -433,3 +442,235 @@ Don't say: Interface is 100% abstract and cannot have implementation. That's out
 
 Better answer:
 Interface => An interface defines a contract that implementing types must satisfy. Modern C# interfaces can also contain default implementations and other members, but they're primarily used to define abstractions and capabilities.
+
+# Value Types vs Reference Types ======================================
+
+The three together
+
+Memorize this table:
+
+Keyword	Passed			Must initialize before?	Method can modify?
+Nothing	By value		Yes			Only its copy
+ref	By reference		✅ Yes			✅ Yes
+out	By reference		❌ No			✅ Must assign
+in	By reference		✅ Yes			❌ No
+
+Think:
+
+ref → "Here is my variable. You can change it."
+
+out → "Give me a value through this variable."
+
+in  → "Read my variable, but don't change it."
+⚠️ One important correction to a common mental model
+
+Don't think:
+
+Value type     → Stack
+Reference type → Heap
+
+as an absolute rule.
+
+That's an oversimplification.
+
+The actual distinction is about value semantics vs reference semantics. Where a particular variable/object is physically stored is more complicated and depends on context/runtime implementation.
+
+For your interview, focus first on the semantics, not "stack = value, heap = reference."
+
+⚠️ Almost correct — important wording
+
+You said:
+
+int x = pass by value
+ref int x = pass by reference
+
+Correct. But remember the bigger C# rule: C# parameters are passed by value by default. ref explicitly changes that to pass by reference.
+
+The important thing you should now remember is:
+
+Value type
+    ↓
+Contains the value
+
+Reference type
+    ↓
+Contains a reference to an object
+
+
+ref
+    ↓
+Reference to the variable itself
+
+in
+    ↓
+Read-only reference to the variable
+    ↓
+BUT if that variable contains a reference,
+the object itself isn't automatically immutable
+
+out
+    ↓
+Method must provide a value
+
+That last in distinction is an excellent interview-level detail.
+
+Quick table
+Combination	Overload allowed?
+int vs ref int	✅
+int vs out int	✅
+int vs in int	❌
+ref int vs out int	❌
+ref int vs in int	❌
+out int vs in int	❌
+
+# Datatypes ==================================================
+
+Know these very well:
+
+int
+long
+float
+double
+decimal
+bool
+char
+string
+object
+var
+dynamic
+const
+readonly
+struct
+enum
+nullable types
+
+And understand:
+
+Value vs Reference
+Compile-time vs Runtime typing
+decimal vs double
+var vs dynamic
+const vs readonly
+class vs struct
+🔥 Important interview traps
+var vs dynamic
+var
+→ compile-time type inference
+
+dynamic
+→ runtime binding
+double vs decimal
+double
+→ general floating-point calculations
+
+decimal
+→ financial/monetary calculations
+const vs readonly
+const
+→ compile-time constant
+
+readonly
+→ can be assigned during construction
+
+# const is implicitly static.
+
+string vs char
+char
+→ one character
+
+string
+→ sequence of characters
+class vs struct
+class
+→ reference type
+
+struct
+→ value type
+One thing I DON'T want you to memorize incorrectly
+
+Don't say:
+
+"int is stored on the stack and class objects are stored on the heap."
+
+That's an oversimplification, just like we discussed earlier.
+
+Instead say:
+
+"int is a value type, while a class is a reference type. Their storage location depends on context and runtime behavior."
+
+That's a much better interview answer.
+
+# boxing and unboxing
+
+simple : 
+unboxing => object/reference type to value type conversion 
+object reference
+      ↓
+  unboxing
+      ↓
+   int value
+
+=> int num = 20;
+=> object obj = num;  // boxing
+
+boxing => value type to object/reference type conversion 
+int value
+   ↓
+boxing
+   ↓
+object reference
+=> int newNum = (int)obj; //unboxing
+
+Final interview cheat sheet
+
+Keep this mental model:
+
+var
+→ compiler infers type
+
+dynamic
+→ runtime binding
+
+object
+→ System.Object / ultimate base type
+
+double
+→ binary floating-point
+
+decimal
+→ high-precision decimal arithmetic / money
+
+const
+→ compile-time constant
+→ implicitly static
+
+readonly
+→ assigned at declaration/constructor
+→ each object can have its own value
+
+boxing
+→ value type → object/reference
+
+unboxing
+→ object → value type
+
+nullable
+→ value type that can represent null
+
+Parse
+→ invalid input → exception
+
+TryParse
+→ invalid input → false
+
+implicit conversion
+→ compiler can perform automatically
+
+explicit conversion
+→ programmer must request conversion/cast
+
+casting
+→ type → compatible type
+
+parsing
+→ string/text → value

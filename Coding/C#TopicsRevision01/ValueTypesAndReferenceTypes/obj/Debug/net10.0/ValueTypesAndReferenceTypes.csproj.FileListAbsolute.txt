@@ -1,0 +1,15 @@
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\bin\Debug\net10.0\ValueTypesAndReferenceTypes.exe
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\bin\Debug\net10.0\ValueTypesAndReferenceTypes.deps.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\bin\Debug\net10.0\ValueTypesAndReferenceTypes.runtimeconfig.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\bin\Debug\net10.0\ValueTypesAndReferenceTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\bin\Debug\net10.0\ValueTypesAndReferenceTypes.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.AssemblyInfoInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.AssemblyInfo.cs
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.csproj.CoreCompileInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.sourcelink.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\refint\ValueTypesAndReferenceTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ValueTypesAndReferenceTypes.genruntimeconfig.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ValueTypesAndReferenceTypes\obj\Debug\net10.0\ref\ValueTypesAndReferenceTypes.dll

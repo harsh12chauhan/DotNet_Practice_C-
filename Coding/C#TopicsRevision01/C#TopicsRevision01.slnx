@@ -1,9 +1,12 @@
 <Solution>
   <Project Path="Constructor/Constructor.csproj" Id="41913868-3799-4700-a947-9aecd77b615f" />
+  <Project Path="DataTypes/DataTypes.csproj" Id="ac43ecb5-e607-4ede-ba05-16e43f903568" />
+  <Project Path="EmployeeManagementSystem/Arrays1D2DJagged.csproj" Id="736e2b41-eea5-492e-bc0d-987f9cc91ce1" />
   <Project Path="Inheritance/Inheritance.csproj" Id="9b9782a9-0ecb-49fa-8a57-659fe27f611a" />
   <Project Path="Interfaces/Interfaces.csproj" Id="c2b71bed-0b43-4791-8ead-fbcfe8e74704" />
   <Project Path="MethodOverloading/MethodOverloading.csproj" />
   <Project Path="PolymorphisAbstractHidingObjectInitializationCompositionCasting/PolymorphisAbstractHidingObjectInitializationCompositionCasting.csproj" Id="0bd80d11-c64b-4235-ad10-8c986174dfb9" />
   <Project Path="Property/Property.csproj" Id="ee92ac58-b542-4a23-8626-c5676003db57" />
   <Project Path="Static/Static.csproj" Id="b3871482-ced9-4dda-8ad7-49f45cf56108" />
+  <Project Path="ValueTypesAndReferenceTypes/ValueTypesAndReferenceTypes.csproj" Id="efa03c25-51f2-4904-8e24-58a5210e2d44" />
 </Solution>

@@ -12,3 +12,4 @@ C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\Interfaces\obj\Debug\net
 C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\Interfaces\obj\Debug\net10.0\Interfaces.pdb
 C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\Interfaces\obj\Debug\net10.0\Interfaces.genruntimeconfig.cache
 C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\Interfaces\obj\Debug\net10.0\ref\Interfaces.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\Interfaces\obj\Debug\net10.0\Interfaces.sourcelink.json

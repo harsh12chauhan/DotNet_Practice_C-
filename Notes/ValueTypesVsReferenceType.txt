@@ -1,0 +1,549 @@
+Topic: Value Types vs Reference Types
+
+This is very important for C# interviews, because ref, out, in, boxing, arrays, strings, etc. all connect to this.
+
+1. Value Type
+A value type variable directly contains its value.
+
+Examples:
+int a = 10;
+int b = a;
+
+b = 20;
+
+Now:
+
+a = 10
+b = 20
+
+Changing b doesn't change a.
+
+Conceptually:
+
+a ──→ 10
+
+b ──→ 20
+
+Common value types:
+
+int
+double
+float
+decimal
+bool
+char
+struct
+enum
+2. Reference Type
+
+A reference type variable contains a reference to an object.
+
+Example:
+
+class Person
+{
+    public string Name { get; set; }
+}
+
+Then:
+
+Person p1 = new Person();
+p1.Name = "Harsh";
+
+Person p2 = p1;
+
+p2.Name = "Amit";
+
+What is p1.Name?
+
+Amit
+
+Why?
+
+Because:
+
+p1 ──────┐
+         ↓
+      Person object
+      Name = "Amit"
+         ↑
+         │
+p2 ──────┘
+
+p1 and p2 refer to the same object.
+
+Common reference types:
+
+class
+interface
+delegate
+array
+string
+object
+3. The classic interview example
+Value type
+int x = 10;
+
+Change(x);
+
+Console.WriteLine(x);
+
+void Change(int number)
+{
+    number = 100;
+}
+
+Output:
+
+10
+
+Because a copy of x was passed.
+
+Reference type
+Person person = new Person();
+person.Name = "Harsh";
+
+Change(person);
+
+Console.WriteLine(person.Name);
+
+void Change(Person p)
+{
+    p.Name = "Amit";
+}
+
+Output:
+
+Amit
+
+Because the copied reference still points to the same object.
+
+⚠️ This leads to an extremely common interview misconception:
+
+"Reference types are passed by reference."
+
+Not exactly.
+
+By default, C# passes everything by value.
+
+For a reference type, the reference itself is copied by value.
+
+That's an important distinction.
+
+4. ref
+
+ref means:
+
+Pass the variable itself by reference.
+
+Example:
+
+void Change(ref int number)
+{
+    number = 100;
+}
+
+Calling:
+
+int x = 10;
+
+Change(ref x);
+
+Console.WriteLine(x);
+
+Output:
+
+100
+
+Without ref:
+
+x
+ ↓
+10
+
+Function gets a copy:
+
+number
+ ↓
+10
+
+With ref:
+
+x
+ ↓
+10
+ ↑
+number
+
+Both refer to the same variable storage.
+
+Important:
+
+With ref, the variable must already be initialized.
+
+int x = 10;
+
+Change(ref x); // ✅
+
+But:
+
+int x;
+
+Change(ref x); // ❌
+5. out
+
+out also passes a variable by reference, but has a different purpose:
+
+The method is responsible for assigning the value.
+
+Example:
+
+void GetValue(out int number)
+{
+    number = 100;
+}
+
+Then:
+
+int x;
+
+GetValue(out x);
+
+Console.WriteLine(x);
+
+Output:
+
+100
+
+Notice:
+
+int x;
+
+doesn't initialize x.
+
+That's okay with out.
+
+Rule
+ref → must already have a value
+
+out → doesn't need a value before the call
+       but method MUST assign one
+6. Why does TryParse use out?
+
+You've probably seen this:
+
+if (int.TryParse("123", out int number))
+{
+    Console.WriteLine(number);
+}
+
+TryParse needs to return two pieces of information:
+
+1. Did conversion succeed? → bool
+2. What is the converted number? → out number
+
+So:
+
+bool success = int.TryParse("123", out int number);
+
+is essentially:
+
+return value → success
+out parameter → number
+
+This is a very common real-world use of out.
+
+7. in
+
+in means:
+
+Pass the argument by reference, but the method cannot modify it through that parameter.
+
+Example:
+
+void Display(in int number)
+{
+    Console.WriteLine(number);
+}
+
+Call:
+
+int x = 100;
+
+Display(in x);
+
+The method receives it by reference, but:
+
+void Display(in int number)
+{
+    number = 200; // ❌
+}
+
+isn't allowed.
+
+🧠 The three together
+
+Memorize this table:
+
+Keyword	Passed	Must initialize before?	Method can modify?
+Nothing	By value	Yes	Only its copy
+ref	By reference	✅ Yes	✅ Yes
+out	By reference	❌ No	✅ Must assign
+in	By reference	✅ Yes	❌ No
+
+Think:
+
+ref → "Here is my variable. You can change it."
+
+out → "Give me a value through this variable."
+
+in  → "Read my variable, but don't change it."
+⚠️ One important correction to a common mental model
+
+Don't think:
+
+Value type     → Stack
+Reference type → Heap
+
+as an absolute rule.
+
+That's an oversimplification.
+
+The actual distinction is about value semantics vs reference semantics. Where a particular variable/object is physically stored is more complicated and depends on context/runtime implementation.
+
+For your interview, focus first on the semantics, not "stack = value, heap = reference."
+
+Your learning checklist for this topic
+
+We'll need to practice:
+
+ Value type copying
+ Reference type copying
+ Pass-by-value
+ ref
+ out
+ in
+ TryParse with out
+ A common interview trap: reference type ≠ pass-by-reference
+
+Once you're comfortable with this revision, say task and I'll give you one assignment covering all of these.
+
+semantics,
+
+what is this ?
+
+Semantics simply means "what something means or how it behaves."
+
+In our C# context:
+
+Value semantics vs reference semantics = how variables behave when you copy, assign, or pass them to methods.
+
+Example
+int a = 10;
+int b = a;
+
+b = 20;
+
+Here, b gets its own value:
+
+a → 10
+b → 20
+
+That's value semantics.
+
+For a reference type:
+
+Person p1 = new Person();
+Person p2 = p1;
+
+p2.Name = "Harsh";
+
+Both references point to the same object:
+
+p1 ──┐
+     ↓
+   Person
+   Name = "Harsh"
+     ↑
+p2 ──┘
+
+That's reference semantics.
+
+So when I said:
+
+"Focus first on the semantics"
+
+I simply meant:
+
+Focus on how the code behaves, rather than worrying about where the data is physically stored (stack/heap).
+
+For your C# interviews, that's the more important thing to understand.
+
+⚠️ Almost correct — important wording
+
+You said:
+
+int x = pass by value
+ref int x = pass by reference
+
+Correct. But remember the bigger C# rule:
+
+C# parameters are passed by value by default.
+
+ref explicitly changes that to pass by reference.
+
+The important thing you should now remember is:
+
+Value type
+    ↓
+Contains the value
+
+Reference type
+    ↓
+Contains a reference to an object
+
+
+ref
+    ↓
+Reference to the variable itself
+
+in
+    ↓
+Read-only reference to the variable
+    ↓
+BUT if that variable contains a reference,
+the object itself isn't automatically immutable
+
+out
+    ↓
+Method must provide a value
+
+That last in distinction is an excellent interview-level detail.
+
+public static void IncreaseSalary(double amount) { amount += 10000; } Keep your ref version too: C#
+
+does this also comes under method overloading one wiht pass by reference and one with pass by value
+
+Yes. These are considered different method signatures for overloading because ref is part of the method signature.
+
+So these two can coexist:
+
+public static void IncreaseSalary(double amount)
+{
+    amount += 10000;
+}
+
+public static void IncreaseSalary(ref double amount)
+{
+    amount += 10000;
+}
+
+You can call them separately:
+
+double salary = 50000;
+
+IncreaseSalary(salary);      // calls value version
+IncreaseSalary(ref salary);  // calls ref version
+Why does C# know which one to call?
+
+Because ref must explicitly appear at the call site:
+
+IncreaseSalary(50000)
+       ↓
+double version
+
+IncreaseSalary(ref salary)
+       ↓
+ref version
+
+So yes, this is a good example of method overloading based on parameter passing mode.
+
+One important interview detail
+
+You cannot overload based only on in vs ref:
+
+void Test(ref int x) { }
+void Test(in int x) { } // ❌
+
+But value vs ref is allowed:
+
+void Test(int x) { }
+void Test(ref int x) { } // ✅
+
+So your current example actually connects two topics you've already learned:
+
+Method Overloading + ref parameter.
+
+and what about out and in or out and ref
+
+Yes — but there are some important rules.
+
+1. value vs ref → ✅ Allowed
+void Test(int x) { }
+
+void Test(ref int x) { }
+
+These are different signatures.
+
+2. value vs out → ✅ Allowed
+void Test(int x) { }
+
+void Test(out int x)
+{
+    x = 10;
+}
+
+These are different signatures.
+
+3. value vs in → ⚠️ Not something to rely on for overloading
+void Test(int x) { }
+
+void Test(in int x) { } // ❌ CS0663
+
+C# doesn't allow a type to overload solely on in versus the by-value form.
+
+4. ref vs out → ❌ Not allowed
+void Test(ref int x) { }
+
+void Test(out int x)
+{
+    x = 10;
+}
+
+❌ You cannot overload these because ref and out are not considered different enough for a method signature.
+
+This is an important interview question.
+
+5. ref vs in → ❌ Not allowed
+void Test(ref int x) { }
+
+void Test(in int x) { } // ❌
+
+Again, you cannot overload solely on ref vs in.
+
+Quick table
+Combination	Overload allowed?
+int vs ref int	✅
+int vs out int	✅
+int vs in int	❌
+ref int vs out int	❌
+ref int vs in int	❌
+out int vs in int	❌
+🧠 Easy interview rule
+
+Think of it this way:
+
+normal ↔ ref   ✅
+normal ↔ out   ✅
+
+ref ↔ out      ❌
+ref ↔ in       ❌
+out ↔ in       ❌
+
+Also, ref, out, and in must match at the call site:
+
+Test(ref x);
+Test(out x);
+Test(in x);
+
+They aren't interchangeable.
