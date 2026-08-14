@@ -1,0 +1,754 @@
+1. Why Do We Need Delegates?
+
+Imagine you have a method:
+
+C#
+
+static void SayHello()
+
+{
+
+Console.WriteLine("Hello");
+
+}
+Show more lines
+
+Normally, you call it directly:
+
+C#
+
+SayHello();
+Show more lines
+
+But what if you want to:
+
+Store a method in a variable
+Pass a method to another method
+Return a method from a method
+Decide at runtime which method to execute
+
+That's where delegates come in.
+
+A delegate is a type that holds a reference to a method.
+
+Think of it as:
+
+Delegate = Pointer to a method (but type-safe)
+
+2. Real-Life Analogy
+
+Imagine a TV remote.
+
+The remote does not know how the TV works internally.
+
+It only knows:
+
+Plain Text
+
+Press Power Button -> Call Power Method
+Show more lines
+
+The button acts like a delegate.
+
+Plain Text
+
+Button ---> Method
+Show more lines
+
+When pressed, it invokes the assigned method.
+
+3. Declaring a Delegate
+
+A delegate must specify:
+
+Return type
+Parameters
+
+Example:
+
+C#
+
+delegate void MyDelegate();
+Show more lines
+
+This means:
+
+MyDelegate can hold any method that:
+
+Returns void
+Takes no parameters
+4. Assigning a Method to a Delegate
+C#
+
+using System;
+
+delegate void MyDelegate();
+
+class Program
+
+{
+
+static void Greet()
+8
+{
+9
+Console.WriteLine("Hello");
+10
+}
+11
+ 
+12
+static void Main()
+13
+{
+14
+MyDelegate del = Greet;
+15
+ 
+16
+del();
+17
+}
+18
+}
+Show more lines
+
+Output:
+
+Plain Text
+1
+Hello
+Show more lines
+
+The delegate stores a reference to Greet.
+
+Equivalent to:
+
+C#
+1
+del.Invoke();
+Show more lines
+5. Delegate Signature Must Match
+
+Suppose:
+
+C#
+1
+delegate void MyDelegate();
+Show more lines
+
+Valid:
+
+C#
+1
+void Hello()
+2
+{
+3
+}
+Show more lines
+
+Invalid:
+
+C#
+1
+int Hello()
+2
+{
+3
+return 1;
+4
+}
+Show more lines
+
+Why?
+
+Because return type doesn't match.
+
+Also invalid:
+
+C#
+1
+void Hello(string name)
+2
+{
+3
+}
+Show more lines
+
+Because parameters don't match.
+
+The method signature must match exactly.
+
+6. Delegates with Parameters
+
+Example:
+
+C#
+1
+delegate void PrintDelegate(string message);
+2
+ 
+3
+class Program
+4
+{
+5
+static void Print(string text)
+6
+{
+7
+Console.WriteLine(text);
+8
+}
+9
+ 
+10
+static void Main()
+11
+{
+12
+PrintDelegate del = Print;
+13
+ 
+14
+del("Hello Delegates");
+15
+}
+16
+}
+Show more lines
+
+Output:
+
+Plain Text
+1
+Hello Delegates
+Show more lines
+7. Delegates with Return Values
+C#
+1
+delegate int MathDelegate(int a, int b);
+2
+ 
+3
+class Program
+4
+{
+5
+static int Add(int x, int y)
+6
+{
+7
+return x + y;
+8
+}
+9
+ 
+10
+static void Main()
+11
+{
+12
+MathDelegate del = Add;
+13
+ 
+14
+int result = del(10, 20);
+15
+ 
+16
+Console.WriteLine(result);
+17
+}
+18
+}
+Show more lines
+
+Output:
+
+Plain Text
+1
+30
+Show more lines
+8. Passing Methods as Parameters
+
+This is where delegates become really powerful.
+
+Without delegates:
+
+C#
+1
+CalculateAdd();
+2
+CalculateMultiply();
+3
+CalculateSubtract();
+Show more lines
+
+With delegates:
+
+C#
+1
+delegate int Operation(int a, int b);
+2
+ 
+3
+static void Calculate(int a, int b, Operation operation)
+4
+{
+5
+Console.WriteLine(operation(a, b));
+6
+}
+Show more lines
+
+Methods:
+
+C#
+1
+static int Add(int a, int b)
+2
+{
+3
+return a + b;
+4
+}
+5
+ 
+6
+static int Multiply(int a, int b)
+7
+{
+8
+return a * b;
+9
+}
+Show more lines
+
+Usage:
+
+C#
+1
+Calculate(10, 5, Add);
+2
+Calculate(10, 5, Multiply);
+Show more lines
+
+Output:
+
+Plain Text
+1
+15
+2
+50
+Show more lines
+
+The method behavior is injected at runtime.
+
+9. Multicast Delegates
+
+A delegate can point to multiple methods.
+
+C#
+1
+delegate void Notify();
+2
+ 
+3
+static void Email()
+4
+{
+5
+Console.WriteLine("Email Sent");
+6
+}
+7
+ 
+8
+static void Sms()
+9
+{
+10
+Console.WriteLine("SMS Sent");
+11
+}
+Show more lines
+
+Combine:
+
+C#
+1
+Notify notify = Email;
+2
+notify += Sms;
+3
+ 
+4
+notify();
+Show more lines
+
+Output:
+
+Plain Text
+1
+Email Sent
+2
+SMS Sent
+Show more lines
+
+Delegate execution chain:
+
+Plain Text
+1
+notify
+2
+|
+3
++--> Email()
+4
+|
+5
++--> Sms()
+Show more lines
+
+Remove:
+
+C#
+1
+notify -= Sms;
+Show more lines
+10. Built-in Delegates
+
+Writing custom delegates every time is tedious.
+
+.NET provides generic delegates.
+
+Action
+
+Represents methods returning void.
+
+C#
+1
+Action<string> action = Print;
+2
+ 
+3
+action("Hello");
+Show more lines
+
+Equivalent to:
+
+C#
+1
+delegate void MyDelegate(string text);
+Show more lines
+Func
+
+Represents methods returning a value.
+
+C#
+1
+Func<int, int, int> add = Add;
+Show more lines
+
+Meaning:
+
+Plain Text
+1
+Input1 = int
+2
+Input2 = int
+3
+Return = int
+Show more lines
+
+Example:
+
+C#
+1
+Func<int, int, int> add =
+2
+(a, b) => a + b;
+3
+ 
+4
+Console.WriteLine(add(2, 3));
+Show more lines
+
+Output:
+
+Plain Text
+1
+5
+Show more lines
+Predicate
+
+Returns boolean.
+
+C#
+1
+Predicate<int> isEven =
+2
+x => x % 2 == 0;
+Show more lines
+
+Usage:
+
+C#
+1
+Console.WriteLine(isEven(10));
+Show more lines
+
+Output:
+
+Plain Text
+1
+True
+Show more lines
+11. Anonymous Methods
+
+Before lambdas existed:
+
+C#
+1
+Action display = delegate()
+2
+{
+3
+Console.WriteLine("Hello");
+4
+};
+Show more lines
+
+Usage:
+
+C#
+1
+display();
+Show more lines
+
+Output:
+
+Plain Text
+1
+Hello
+Show more lines
+12. Lambda Expressions
+
+Most common modern usage.
+
+Instead of:
+
+C#
+1
+static int Add(int a, int b)
+2
+{
+3
+return a + b;
+4
+}
+Show more lines
+
+You can write:
+
+C#
+1
+Func<int, int, int> add =
+2
+(a, b) => a + b;
+Show more lines
+
+Usage:
+
+C#
+1
+Console.WriteLine(add(5, 6));
+Show more lines
+
+Output:
+
+Plain Text
+1
+11
+Show more lines
+
+Lambdas are typically compiled into delegates.
+
+13. Delegates Behind LINQ
+
+When you write:
+
+C#
+1
+var result =
+2
+numbers.Where(x => x > 5);
+Show more lines
+
+The lambda:
+
+C#
+1
+x => x > 5
+Show more lines
+
+is passed as a delegate.
+
+Internally:
+
+C#
+1
+Func<int, bool>
+Show more lines
+
+So LINQ heavily relies on delegates.
+
+14. Delegates Behind Events
+
+Events are built on top of delegates.
+
+Example:
+
+C#
+1
+public delegate void ButtonClickHandler();
+2
+ 
+3
+public event ButtonClickHandler Click;
+Show more lines
+
+When button is clicked:
+
+C#
+1
+Click?.Invoke();
+Show more lines
+
+Subscribers receive notification.
+
+Plain Text
+1
+Button Click
+2
+|
+3
+v
+4
+Event
+5
+|
+6
+v
+7
+Delegate
+8
+|
+9
+v
+10
+Subscribers
+Show more lines
+15. Memory Picture
+
+When:
+
+C#
+1
+MyDelegate del = Greet;
+Show more lines
+
+Memory conceptually:
+
+Plain Text
+1
+del
+2
+|
+3
++------> Greet()
+Show more lines
+
+For multicast:
+
+C#
+1
+del += Print;
+Show more lines
+Plain Text
+1
+del
+2
+|
+3
++----> Greet()
+4
+|
+5
++----> Print()
+Show more lines
+16. Interview Questions
+What is a delegate?
+
+A delegate is a type-safe object that holds references to methods with a specific signature.
+
+Why use delegates?
+
+To:
+
+Pass methods as parameters
+Implement callbacks
+Support events
+Enable loose coupling
+Support LINQ and lambdas
+Difference between Delegate and Event?
+
+Delegate:
+
+C#
+1
+public MyDelegate del;
+Show more lines
+
+Anyone can invoke it.
+
+Event:
+
+C#
+1
+public event MyDelegate del;
+Show more lines
+
+Only the declaring class can invoke it.
+
+Events provide controlled access to delegates.
+
+What is a Multicast Delegate?
+
+A delegate containing references to multiple methods.
+
+C#
+1
+del += Method1;
+2
+del += Method2;
+Show more lines
+
+Calling:
+
+C#
+1
+del();
+Show more lines
+
+executes all registered methods.
+
+What are Action, Func, and Predicate?
+Action → returns void
+Func → returns a value
+Predicate → returns bool
+The One-Sentence Summary
+
+A delegate is a type-safe reference to one or more methods, allowing methods to be stored, passed, and invoked just like any other object, forming the foundation of events, callbacks, LINQ, and lambda expressions in .NET.
