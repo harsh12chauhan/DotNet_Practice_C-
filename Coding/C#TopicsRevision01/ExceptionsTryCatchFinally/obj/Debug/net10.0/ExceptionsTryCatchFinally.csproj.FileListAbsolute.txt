@@ -1,0 +1,15 @@
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\bin\Debug\net10.0\ExceptionsTryCatchFinally.exe
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\bin\Debug\net10.0\ExceptionsTryCatchFinally.deps.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\bin\Debug\net10.0\ExceptionsTryCatchFinally.runtimeconfig.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\bin\Debug\net10.0\ExceptionsTryCatchFinally.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\bin\Debug\net10.0\ExceptionsTryCatchFinally.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.AssemblyInfoInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.AssemblyInfo.cs
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.csproj.CoreCompileInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.sourcelink.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\refint\ExceptionsTryCatchFinally.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ExceptionsTryCatchFinally.genruntimeconfig.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ExceptionsTryCatchFinally\obj\Debug\net10.0\ref\ExceptionsTryCatchFinally.dll
