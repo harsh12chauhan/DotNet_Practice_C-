@@ -674,3 +674,83 @@ casting
 
 parsing
 → string/text → value
+
+# Extension methods =================================================
+
+If the interviewer asks:
+
+"What is an extension method in C#?"
+
+A good answer:
+
+An extension method is a static method that allows us to add functionality to an existing type without modifying the original type or using inheritance. It is defined inside a static class, and its first parameter uses the this keyword to specify the type being extended.
+
+And if they ask:
+
+"How does it work internally?"
+
+Say:
+
+The compiler treats the extension method call as a static method call. For example, employee.PrintName() is essentially translated to EmployeeExtensions.PrintName(employee).
+
+🧠 Remember this pattern
+
+Whenever you see:
+
+public static class XExtensions
+{
+    public static ReturnType MethodName(this X object)
+    {
+        // logic
+    }
+}
+
+Think:
+
+"I am adding a method-like syntax to X without modifying X."
+
+# Tuple and valueTuple ===============================================
+
+Q1. What is a Tuple?
+
+A Tuple is a type that allows us to group multiple values of different types into a single object.
+
+Q2. Difference between Tuple and ValueTuple?
+
+Tuple is a reference type implemented as a class, whereas ValueTuple is a value type implemented as a struct. Modern C# generally uses ValueTuple because it supports named elements, deconstruction, and more convenient syntax.
+
+Q3. How do you return multiple values from a method?
+static (int Sum, int Product) Calculate(int a, int b)
+{
+    return (a + b, a * b);
+}
+Q4. What is deconstruction?
+var (sum, product) = Calculate(10, 5);
+
+It means extracting the individual elements of a tuple into separate variables.
+
+🧠 Quick memory trick
+
+Think:
+
+Tuple
+  ↓
+Class
+  ↓
+Reference Type
+  ↓
+Older
+
+
+ValueTuple
+  ↓
+Struct
+  ↓
+Value Type
+  ↓
+Modern C#
+  ↓
+Named elements + Deconstruction
+
+For your revision, focus mainly on ValueTuple, named tuples, deconstruction, discards, and returning multiple values. These are much more useful in modern C# than the old Tuple class
+

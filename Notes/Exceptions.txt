@@ -1,0 +1,339 @@
+🚀 Next Topic: Exceptions
+
+Because you have limited time, I'll teach it in an interview-focused + practical way:
+
+What is an exception?
+Exception hierarchy
+try
+catch
+finally
+Multiple catch
+throw
+throw vs throw ex
+Custom exceptions
+Exception filters (when)
+Best practices
+One practical task
+
+Then we'll move quickly to Events → Extension Methods → IComparable/IComparer → Equals/GetHashCode → IDisposable, etc.
+
+Say next when you're ready.
+
+give me simple single example which will explain  all of this
+
+Yes. Let's use one simple Employee example that demonstrates the complete exception flow without making it unnecessarily complicated.
+
+One example covering the important exception concepts
+using System;
+
+
+namespace ExceptionDemo
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                Console.Write("Enter employee salary: ");
+                int salary = int.Parse(Console.ReadLine());
+
+
+                if (salary < 0)
+                {
+                    throw new Exception("Salary cannot be negative.");
+                }
+
+
+                int bonus = 10000;
+
+
+                int totalSalary = salary + bonus;
+
+
+                Console.WriteLine($"Total Salary: {totalSalary}");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Please enter a valid number.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("Salary processing completed.");
+            }
+        }
+    }
+}
+
+Now let's understand every part.
+
+1. try
+try
+{
+    int salary = int.Parse(Console.ReadLine());
+    
+    // risky code
+}
+
+Put code that may cause an exception inside try.
+
+For example:
+
+abc
+
+cannot be converted to an integer, so int.Parse() throws FormatException.
+
+2. catch
+catch (FormatException)
+{
+    Console.WriteLine("Please enter a valid number.");
+}
+
+catch handles the exception.
+
+If the user enters:
+
+abc
+
+the program doesn't crash.
+
+It goes to:
+
+catch (FormatException)
+3. Multiple catch
+
+We have:
+
+catch (FormatException)
+{
+    ...
+}
+catch (Exception ex)
+{
+    ...
+}
+
+The first one handles a specific exception.
+
+The second one handles more general exceptions.
+
+Think:
+
+FormatException
+      ↓
+     Exception
+
+So specific catches should come before general catches.
+
+4. throw
+
+Here:
+
+if (salary < 0)
+{
+    throw new Exception("Salary cannot be negative.");
+}
+
+We're manually creating/throwing an exception.
+
+For example:
+
+Enter salary: -5000
+
+Then:
+
+throw
+ ↓
+catch (Exception ex)
+
+Output:
+
+Error: Salary cannot be negative.
+Why throw?
+
+Because sometimes your application detects an invalid business condition and needs to report it.
+
+5. finally
+finally
+{
+    Console.WriteLine("Salary processing completed.");
+}
+
+finally normally executes whether an exception occurs or not.
+
+For example:
+
+Success:
+try → finally
+
+
+Exception:
+try → catch → finally
+
+It's commonly used for cleanup.
+
+For example:
+
+file.Close();
+connection.Close();
+
+Although modern C# often uses using/IDisposable for resource cleanup.
+
+6. Exception ex
+
+Here:
+
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+ex contains information about the exception.
+
+Common properties:
+
+ex.Message
+ex.StackTrace
+ex.InnerException
+
+For example:
+
+Console.WriteLine(ex.Message);
+
+might print:
+
+Salary cannot be negative.
+7. Exception hierarchy
+
+You don't need to memorize the entire hierarchy.
+
+Just understand:
+
+System.Exception
+      │
+      ├── SystemException
+      │       ├── FormatException
+      │       ├── NullReferenceException
+      │       ├── IndexOutOfRangeException
+      │       ├── InvalidOperationException
+      │       └── ...
+      │
+      └── ApplicationException
+
+Most of the time you'll work with specific exceptions derived from Exception.
+
+8. throw vs throw ex ⭐⭐⭐
+
+This is an important interview question.
+
+Suppose:
+
+catch (Exception ex)
+{
+    throw;
+}
+
+Use:
+
+throw;
+
+when you want to rethrow the same exception while preserving the original stack trace.
+
+Avoid:
+
+throw ex;
+
+because it resets the stack-trace information from the point of rethrow.
+
+Interview answer
+
+throw preserves the original stack trace, while throw ex resets the stack trace from the rethrow location.
+
+Remember:
+
+catch
+{
+    throw;       ✅
+    // throw ex; ❌ usually avoid
+}
+9. Custom Exception
+
+If your application has a specific business error, you can create your own exception.
+
+class InvalidSalaryException : Exception
+{
+    public InvalidSalaryException(string message)
+        : base(message)
+    {
+    }
+}
+
+Then:
+
+if (salary < 0)
+{
+    throw new InvalidSalaryException(
+        "Salary cannot be negative.");
+}
+
+And handle it:
+
+catch (InvalidSalaryException ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+Now your exception has a meaningful application-specific name.
+
+10. Exception filter — when
+
+You can also filter exceptions:
+
+catch (Exception ex) when (ex.Message.Contains("Salary"))
+{
+    Console.WriteLine("Salary-related error.");
+}
+
+This is called an exception filter.
+
+You don't need to go deep into this for now.
+
+🧠 Complete flow
+
+Remember this:
+
+             try
+              │
+       risky code executes
+              │
+       ┌──────┴──────┐
+       │             │
+    success       exception
+       │             │
+       │          catch
+       │             │
+       └──────┬──────┘
+              │
+           finally
+              │
+           continue
+Interview essentials
+
+If you're asked about exceptions, be able to explain:
+
+try       → contains risky code
+catch     → handles exception
+finally   → cleanup code
+throw     → explicitly/rethrow exception
+Exception → base exception type
+custom    → application-specific exception
+throw     → preserves stack trace
+throw ex  → resets stack trace
+
+That's enough for the exception theory at your current speed.
+
+Next we'll do one hands-on exception task, then move directly to Events.

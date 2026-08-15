@@ -1,0 +1,15 @@
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\bin\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.exe
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\bin\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.deps.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\bin\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.runtimeconfig.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\bin\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\bin\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.AssemblyInfoInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.AssemblyInfo.cs
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.csproj.CoreCompileInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.sourcelink.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\refint\ParamAnonymousFunctionsTypesLamda.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ParamAnonymousFunctionsTypesLamda.genruntimeconfig.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\ParamAnonymousFunctionsTypesLamda\obj\Debug\net10.0\ref\ParamAnonymousFunctionsTypesLamda.dll
