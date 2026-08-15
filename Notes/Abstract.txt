@@ -1,0 +1,140 @@
+Abstract -----------------
+
+Now we get to your requested topic.
+
+Sometimes you don't want the base class to provide an implementation at all.
+
+For example:
+
+abstract class Animal
+{
+    public abstract void MakeSound();
+}
+
+Notice:
+
+abstract void MakeSound();
+
+There is no method body.
+
+A derived class MUST implement it:
+
+class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Bark");
+    }
+}
+
+Important:
+
+An abstract class cannot be instantiated.
+
+Animal animal = new Animal(); // ❌
+
+But: Animal animal = new Dog(); // ✅
+
+4. abstract vs virtual ---------------------
+
+This is an interview favorite.
+
+virtual ###
+
+Has a default implementation:
+
+public virtual void MakeSound()
+{
+    Console.WriteLine("Some sound");
+}
+
+Child may override it.
+
+abstract ###
+
+Has no implementation:
+
+public abstract void MakeSound();
+
+Child must implement it.
+
+				virtual	abstract
+Method body			✅	❌
+Child must override?		❌	✅
+Class required to be abstract?	❌	✅ if it contains abstract member
+Can instantiate base class?	Usually yes	❌
+
+5. Abstract class can have normal members -----------------
+
+This is important => An abstract class isn't just a collection of abstract methods.
+
+You can have:
+
+abstract class Employee
+{
+    public int Id { get; set; }
+
+    public void Login()
+    {
+        Console.WriteLine("Employee logged in");
+    }
+
+    public abstract void Work();
+}
+
+Then:
+
+class Developer : Employee
+{
+    public override void Work()
+    {
+        Console.WriteLine("Writing code");
+    }
+}
+
+Developer gets:
+
+Id       ← inherited
+Login()  ← inherited
+Work()   ← implemented by Developer
+
+
+
+## C# method cannot be both abstract and static. ❌
+
+C# does have static abstract members in interfaces:
+interface ICalculator<T>
+{
+    static abstract T Add(T a, T b);
+}
+This is allowed, but that's an interface feature, not an abstract class method.
+
+
+You cannot declare a variable/field as abstract in C#. ❌
+
+
+abstract is used for members that a derived class must implement, such as: Methods, Properties, Indexers, Events
+
+But you CAN have an abstract property
+abstract class Animal
+{
+    public abstract string Name { get; set; }
+}
+
+Then the derived class must implement it:
+
+class Dog : Animal
+{
+    public override string Name { get; set; }
+}
+
+So think:
+
+abstract
+│
+├── method       ✅
+├── property     ✅
+├── indexer      ✅
+├── event        ✅
+└── field        ❌
+

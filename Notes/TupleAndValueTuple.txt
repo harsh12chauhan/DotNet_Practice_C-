@@ -1,0 +1,356 @@
+Tuple vs ValueTuple in C#
+
+A tuple is a way to store multiple values of potentially different types together as one object.
+
+For example, instead of:
+
+string name = "Harsh";
+int age = 22;
+double salary = 50000;
+
+we can group them:
+
+(string, int, double) person = ("Harsh", 22, 50000);
+1. Tuple
+
+The older Tuple class is:
+
+Tuple<string, int, double> person =
+    new Tuple<string, int, double>("Harsh", 22, 50000);
+
+Access values using:
+
+Console.WriteLine(person.Item1);
+Console.WriteLine(person.Item2);
+Console.WriteLine(person.Item3);
+
+Output:
+
+Harsh
+22
+50000
+Important
+
+Tuple<T1, T2, ...> is a reference type.
+
+It is a class.
+
+2. ValueTuple
+
+Modern C# provides ValueTuple.
+
+Instead of:
+
+Tuple<string, int> person =
+    new Tuple<string, int>("Harsh", 22);
+
+we can simply write:
+
+(string, int) person = ("Harsh", 22);
+
+or:
+
+var person = ("Harsh", 22);
+
+Access:
+
+Console.WriteLine(person.Item1);
+Console.WriteLine(person.Item2);
+
+Output:
+
+Harsh
+22
+
+ValueTuple is a value type, implemented as a struct.
+
+3. Named ValueTuple ⭐
+
+This is one of the best features.
+
+Instead of:
+
+var person = ("Harsh", 22, 50000);
+
+you can give names:
+
+var person = (
+    Name: "Harsh",
+    Age: 22,
+    Salary: 50000
+);
+
+Now:
+
+Console.WriteLine(person.Name);
+Console.WriteLine(person.Age);
+Console.WriteLine(person.Salary);
+
+Much cleaner than:
+
+person.Item1
+person.Item2
+person.Item3
+4. Returning Multiple Values from a Method ⭐⭐⭐
+
+This is where ValueTuple becomes very useful.
+
+Suppose you want a method to return both name and age.
+
+Without tuple, you might create a class:
+
+class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+But for a simple result, you can use ValueTuple:
+
+static (string Name, int Age) GetPerson()
+{
+    return ("Harsh", 22);
+}
+
+Call it:
+
+var person = GetPerson();
+
+
+Console.WriteLine(person.Name);
+Console.WriteLine(person.Age);
+
+Output:
+
+Harsh
+22
+5. Tuple Deconstruction ⭐⭐⭐
+
+You can directly extract the values.
+
+Instead of:
+
+var person = GetPerson();
+
+
+Console.WriteLine(person.Name);
+Console.WriteLine(person.Age);
+
+you can do:
+
+var (name, age) = GetPerson();
+
+
+Console.WriteLine(name);
+Console.WriteLine(age);
+
+This is called deconstruction.
+
+You can also do:
+
+(string name, int age) = GetPerson();
+6. Example with Multiple Return Values
+static (int Sum, int Difference, int Product) Calculate(int a, int b)
+{
+    return (
+        a + b,
+        a - b,
+        a * b
+    );
+}
+
+Usage:
+
+var result = Calculate(10, 5);
+
+
+Console.WriteLine(result.Sum);
+Console.WriteLine(result.Difference);
+Console.WriteLine(result.Product);
+
+Output:
+
+15
+5
+50
+
+Or deconstruct:
+
+var (sum, difference, product) = Calculate(10, 5);
+
+
+Console.WriteLine(sum);
+Console.WriteLine(difference);
+Console.WriteLine(product);
+7. Discard _
+
+Sometimes you don't need all the returned values.
+
+var (sum, _, product) = Calculate(10, 5);
+
+Here:
+
+sum     → 15
+_       → ignored
+product → 50
+
+This is called a discard.
+
+8. Tuple Assignment / Swapping
+
+ValueTuple makes swapping variables very easy.
+
+Normally:
+
+int temp = a;
+a = b;
+b = temp;
+
+With tuples:
+
+(a, b) = (b, a);
+
+Example:
+
+int a = 10;
+int b = 20;
+
+
+(a, b) = (b, a);
+
+
+Console.WriteLine(a);
+Console.WriteLine(b);
+
+Output:
+
+20
+10
+9. Tuple vs ValueTuple
+
+This is the main thing to remember for interviews:
+
+Feature	Tuple	ValueTuple
+Type	Reference type	Value type
+Implemented as	Class	Struct
+Namespace	System	System
+Syntax	Tuple<int,string>	(int, string)
+Creation	new Tuple<>()	(...)
+Named members	No direct named syntax	Yes
+Access	Item1, Item2	Item1, Item2 or custom names
+Deconstruction	Limited/not the modern pattern	Yes
+Modern C#	Older	Preferred
+10. Memory Concept
+
+This is a useful interview point.
+
+Tuple
+Tuple<int, string> t =
+    new Tuple<int, string>(10, "Harsh");
+
+Tuple is a class, therefore an object is allocated on the managed heap.
+
+ValueTuple
+(int, string) t =
+    (10, "Harsh");
+
+ValueTuple is a struct, so it has value-type semantics.
+
+Don't oversimplify this into "ValueTuple always lives on the stack." Where a value type is stored depends on its context—for example, it can be a field inside an object or boxed.
+
+11. One Important Difference: Mutability
+
+Tuple properties are read-only:
+
+var t = Tuple.Create(10, "Harsh");
+
+
+// t.Item1 = 20;   // ❌
+
+ValueTuple fields can be changed:
+
+var t = (10, "Harsh");
+
+
+t.Item1 = 20;
+
+
+Console.WriteLine(t.Item1);
+
+Output:
+
+20
+12. When Should You Use It?
+
+Use ValueTuple when you need to return or group a small number of related values temporarily.
+
+For example:
+
+static (bool Success, string Message) Login()
+{
+    return (true, "Login successful");
+}
+
+Usage:
+
+var result = Login();
+
+
+if (result.Success)
+{
+    Console.WriteLine(result.Message);
+}
+
+This is very common in modern C#.
+
+But if the data represents an important domain concept, prefer a class/record.
+
+For example, don't necessarily represent an entire complex Employee object as:
+
+(string, int, double, string, string, DateTime, ...)
+
+A proper class/record is much clearer.
+
+🔥 Interview Questions
+Q1. What is a Tuple?
+
+A Tuple is a type that allows us to group multiple values of different types into a single object.
+
+Q2. Difference between Tuple and ValueTuple?
+
+Tuple is a reference type implemented as a class, whereas ValueTuple is a value type implemented as a struct. Modern C# generally uses ValueTuple because it supports named elements, deconstruction, and more convenient syntax.
+
+Q3. How do you return multiple values from a method?
+static (int Sum, int Product) Calculate(int a, int b)
+{
+    return (a + b, a * b);
+}
+Q4. What is deconstruction?
+var (sum, product) = Calculate(10, 5);
+
+It means extracting the individual elements of a tuple into separate variables.
+
+🧠 Quick memory trick
+
+Think:
+
+Tuple
+  ↓
+Class
+  ↓
+Reference Type
+  ↓
+Older
+
+
+ValueTuple
+  ↓
+Struct
+  ↓
+Value Type
+  ↓
+Modern C#
+  ↓
+Named elements + Deconstruction
+
+For your revision, focus mainly on ValueTuple, named tuples, deconstruction, discards, and returning multiple values. These are much more useful in modern C# than the old Tuple class.

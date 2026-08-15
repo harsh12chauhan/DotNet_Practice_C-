@@ -1,0 +1,273 @@
+Object Initialization
+
+This is another syntax you'll frequently see in real C# code.
+
+Instead of:
+
+Employee employee = new Employee();
+
+employee.Name = "Harsh";
+employee.Salary = 50000;
+
+you can write:
+
+Employee employee = new Employee
+{
+    Name = "Harsh",
+    Salary = 50000
+};
+
+This is called an object initializer.
+
+It sets properties immediately after the object is constructed.
+
+
+
+means the syntax is dfferent but its doing same thing right? or its not calling the ctor its directly initializing the properties or datamembers only public once ? can you clearify this for object initialization.
+
+Yes — you're very close. The key is:
+
+An object initializer does NOT replace the constructor. The constructor runs first, and then the initializer assigns the specified properties/fields.
+
+Compare these
+
+Normal constructor:
+
+Employee emp = new Employee(1, "Harsh", 40000);
+
+Object initializer:
+
+Employee emp = new Employee()
+{
+    Id = 1,
+    Name = "Harsh",
+    Salary = 40000
+};
+
+These are not exactly the same thing.
+
+What actually happens
+
+When you write:
+
+Employee emp = new Employee()
+{
+    Name = "Harsh",
+    Salary = 40000
+};
+
+Conceptually, C# does something like:
+
+Employee temp = new Employee();
+
+temp.Name = "Harsh";
+temp.Salary = 40000;
+
+Employee emp = temp;
+
+So the order is:
+
+new Employee()
+      ↓
+Constructor runs
+      ↓
+Object created
+      ↓
+Name = "Harsh"
+Salary = 40000
+      ↓
+Object ready
+Therefore:
+
+❌ Object initializer does not directly create the object without a constructor.
+
+✅ The constructor always runs when you use new.
+
+What if I have a parameterized constructor?
+
+You can combine them:
+
+Employee emp = new Employee(1, "Harsh", 40000)
+{
+    Department = "IT"
+};
+
+Execution:
+
+Employee(1, "Harsh", 40000)
+          ↓
+     constructor
+          ↓
+Id = 1
+Name = Harsh
+Salary = 40000
+          ↓
+Department = "IT"
+          ↓
+      object ready
+
+This is extremely common in C#.
+
+Does it only initialize public properties?
+
+Not necessarily.
+
+Object initializers can initialize accessible properties and fields.
+
+For example:
+
+class Employee
+{
+    public string Name { get; set; }
+
+    public int Age;
+
+    private double Salary;
+}
+
+You can:
+
+Employee emp = new Employee()
+{
+    Name = "Harsh",
+    Age = 22
+};
+
+But you cannot do:
+
+Employee emp = new Employee()
+{
+    Salary = 40000 // ❌ private
+};
+
+because the private field isn't accessible from outside the class.
+
+Important: private set
+
+This is especially relevant to what you've been learning.
+
+Suppose:
+
+public int Id { get; private set; }
+
+Then:
+
+Employee emp = new Employee()
+{
+    Id = 10
+};
+
+❌ Not allowed from outside Employee, because the setter is private.
+
+Even though Id itself is public, its set accessor isn't accessible.
+
+But inside the class, it can be initialized.
+
+One more important distinction
+
+Object initializer:
+
+Employee emp = new Employee
+{
+    Name = "Harsh"
+};
+
+does not mean:
+
+"Call the property setter instead of the constructor."
+
+It means:
+
+"Construct the object, then assign these accessible members."
+
+So if the property has validation:
+
+public double Salary
+{
+    get => salary;
+
+    set
+    {
+        if (value >= 0)
+            salary = value;
+    }
+}
+
+then:
+
+Employee emp = new Employee
+{
+    Salary = -5000
+};
+
+will still go through the property setter.
+
+🧠 Remember this for interviews
+var emp = new Employee(1, "Harsh", 40000)
+{
+    Department = "IT"
+};
+
+Think:
+
+1. new Employee(...)       → constructor
+2. Department = "IT"       → object initializer
+3. emp is ready
+
+So your original understanding:
+
+"It's directly initializing properties/data members only"
+
+is partially correct.
+
+It does initialize the specified members directly after construction, but the constructor is still called first.
+
+And yes, the syntax is different from manually doing:
+
+var emp = new Employee();
+
+emp.Name = "Harsh";
+emp.Salary = 40000;
+
+but the object-initializer syntax is essentially a convenient, compact way of doing those assignments after the constructor has executed.
+
+
+
+
+task part
+=======================================
+You haven't actually tested object initialization
+
+The assignment specifically asked you to use an object initializer.
+
+But your current creation is:
+
+Manager DevopsManager = new Manager(1, "atul", 80000, 4);
+
+That's just a constructor call.
+
+Try something like:
+
+Manager devopsManager = new Manager(1, "atul", 80000, 4)
+{
+    Name = "Atul"
+};
+
+However, in your current design, there isn't really a useful extra public property to initialize because TeamSize is private.
+
+So add something appropriate or change:
+
+private int TeamSize { get; set; }
+
+to:
+
+public int TeamSize { get; set; }
+
+Then:
+
+Manager manager = new Manager(1, "Atul", 80000, 4)
+{
+    TeamSize = 5
+};
+
+Now you're actually practicing object initialization.

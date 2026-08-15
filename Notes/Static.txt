@@ -1,0 +1,491 @@
+C# static — Revision
+
+The simplest mental model is:
+
+Instance member → belongs to an object
+Static member → belongs to the type/class itself
+
+This distinction is the key.
+
+1. Instance variable vs static variable
+
+Suppose we have:
+
+class Employee
+{
+    public string Name;
+    public static string Company = "ABC";
+}
+
+Now:
+
+Employee e1 = new Employee();
+Employee e2 = new Employee();
+
+e1.Name = "Harsh";
+e2.Name = "Rahul";
+
+Name belongs to each object.
+
+So:
+
+e1.Name → Harsh
+e2.Name → Rahul
+
+But Company is static.
+
+There is one shared Company associated with the Employee type:
+
+Employee
+   │
+   └── Company = "ABC"
+       ↑
+       ├── e1
+       └── e2
+
+You normally access it using the class:
+
+Console.WriteLine(Employee.Company);
+
+not:
+
+e1.Company
+2. Static variable
+
+A static field is created once per type/assembly context rather than once for every object instance.
+
+Example:
+
+class Employee
+{
+    public string Name;
+    public static int EmployeeCount = 0;
+}
+
+Now:
+
+Employee e1 = new Employee();
+Employee.EmployeeCount++;
+
+Employee e2 = new Employee();
+Employee.EmployeeCount++;
+
+Console.WriteLine(Employee.EmployeeCount);
+
+Output:
+
+2
+
+Both objects share the same EmployeeCount.
+
+3. Why use static variables?
+
+A classic example is a counter.
+
+class Employee
+{
+    public string Name;
+    public static int Count = 0;
+
+    public Employee(string name)
+    {
+        Name = name;
+        Count++;
+    }
+}
+
+Then:
+
+Employee e1 = new Employee("Harsh");
+Employee e2 = new Employee("Rahul");
+Employee e3 = new Employee("Amit");
+
+Console.WriteLine(Employee.Count);
+
+Output:
+
+3
+
+Count represents information about all employees, not one particular employee.
+
+That's a good candidate for static.
+
+4. Static method
+
+A static method also belongs to the class rather than an object.
+
+class Calculator
+{
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
+}
+
+You don't need:
+
+Calculator calculator = new Calculator();
+
+Instead:
+
+int result = Calculator.Add(10, 20);
+
+This is one of the most common uses of static.
+
+5. Static method cannot directly access instance members
+
+This is very important.
+
+Consider:
+
+class Employee
+{
+    public string Name;
+
+    public static void PrintName()
+    {
+        Console.WriteLine(Name);
+    }
+}
+
+❌ This won't compile.
+
+Why?
+
+Because Name belongs to an object, while PrintName() belongs to the class.
+
+Which employee's Name should it use?
+
+Employee
+ ├── e1 → Name = Harsh
+ ├── e2 → Name = Rahul
+ └── e3 → Name = Amit
+
+Employee.PrintName()
+
+There is no object specified.
+
+Therefore, a static method can directly access static members:
+
+class Employee
+{
+    public static int Count = 0;
+
+    public static void PrintCount()
+    {
+        Console.WriteLine(Count);
+    }
+}
+
+But not instance members directly.
+
+6. Instance method can access static members
+
+The reverse is allowed.
+
+class Employee
+{
+    public string Name;
+    public static int Count;
+
+    public void Display()
+    {
+        Console.WriteLine(Name);   // instance
+        Console.WriteLine(Count);  // static
+    }
+}
+
+Why?
+
+Because an instance method is being called on a particular object:
+
+Employee e = new Employee();
+e.Display();
+
+The object context exists.
+
+It can therefore access both:
+
+Instance method
+     │
+     ├── instance members ✅
+     └── static members   ✅
+
+Whereas:
+
+Static method
+     │
+     ├── static members   ✅
+     └── instance members ❌ directly
+7. Static class
+
+You can make the entire class static:
+
+static class Calculator
+{
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
+}
+
+Now you cannot do:
+
+Calculator calc = new Calculator(); // ❌
+
+You must use:
+
+Calculator.Add(10, 20);
+
+A static class:
+
+Cannot be instantiated
+Can contain static members
+Cannot contain instance members
+Cannot be used as a base class
+8. Why does C# have static classes?
+
+They're useful when the class represents stateless utility functionality.
+
+For example:
+
+static class MathHelper
+{
+    public static int Square(int number)
+    {
+        return number * number;
+    }
+}
+
+You don't need an object to represent a MathHelper.
+
+You simply need the operation:
+
+MathHelper.Square(5);
+
+The .NET framework itself has many static APIs.
+
+For example:
+
+Math.Abs(-10);
+Math.Max(10, 20);
+Console.WriteLine("Hello");
+9. Static constructor
+
+This is another important concept.
+
+You can have:
+
+class Employee
+{
+    public static int Count;
+
+    static Employee()
+    {
+        Count = 100;
+    }
+}
+
+A static constructor is used to initialize static state.
+
+Syntax:
+
+static ClassName()
+{
+}
+
+Important properties:
+
+Has no access modifier
+Has no parameters
+Cannot be called manually
+Runs automatically
+Runs once for the type
+
+For example:
+
+class Database
+{
+    public static string ConnectionString;
+
+    static Database()
+    {
+        Console.WriteLine("Static constructor called");
+        ConnectionString = "Some connection";
+    }
+}
+
+The runtime executes it automatically before the type is first used in a way that requires static initialization.
+
+10. Static vs instance constructor
+
+You can have both:
+
+class Employee
+{
+    public Employee()
+    {
+        Console.WriteLine("Instance constructor");
+    }
+
+    static Employee()
+    {
+        Console.WriteLine("Static constructor");
+    }
+}
+
+The important difference:
+
+Static constructor
+    ↓
+Runs once for the type
+
+Instance constructor
+    ↓
+Runs whenever an object is created
+
+For:
+
+Employee e1 = new Employee();
+Employee e2 = new Employee();
+
+the static constructor runs once, while the instance constructor runs twice.
+
+11. Static property
+
+Just like fields and methods, properties can be static.
+
+class Employee
+{
+    public static int EmployeeCount { get; set; }
+}
+
+Usage:
+
+Employee.EmployeeCount = 10;
+
+Console.WriteLine(Employee.EmployeeCount);
+
+Again:
+
+Employee.EmployeeCount
+
+rather than:
+
+employee.EmployeeCount
+12. Static members and shared state
+
+This is where you need to be careful in real applications.
+
+Consider:
+
+class BankAccount
+{
+    public static double Balance;
+}
+
+All accounts would share the same Balance.
+
+That's probably wrong.
+
+You'd normally want:
+
+class BankAccount
+{
+    public double Balance;
+}
+
+because each account needs its own balance.
+
+So ask yourself:
+
+Does this data belong to each object, or does it belong to the type as a whole?
+
+That's one of the best ways to decide whether something should be static.
+
+13. A very important interview question
+
+Can we access a static member using an object?
+ans => No — you should access static members through the class name, not through an object.
+
+Technically, C# allows some static members to be referenced through an instance in certain contexts? Don't build your mental model around that.
+
+The correct and idiomatic form is:
+
+ClassName.StaticMember
+
+For example:
+
+Math.PI
+
+not through an object.
+
+Think:
+
+Static → class name
+Instance → object name
+
+14. static and Main()
+
+You've already been using static without realizing it:
+
+public static void Main(string[] args)
+
+Why is Main static?
+
+Because the runtime needs an entry point without first creating a Program object.
+
+So the runtime can invoke:
+
+Program.Main()
+
+without:
+
+Program program = new Program();
+program.Main();
+
+That's why Main() is traditionally static.
+
+🧠 The mental model you need
+
+Remember this:
+
+             CLASS
+               │
+        ┌──────┴──────┐
+        │             │
+     static        instance
+        │             │
+   belongs to      belongs to
+    the type        an object
+        │             │
+Employee.Count   employee.Name
+Employee.Add()   employee.Display()
+Static
+Employee.Count
+Employee.GetCount()
+Employee.SomeProperty
+Instance
+employee.Name
+employee.Salary
+employee.CalculateSalary()
+🎯 Interview Cheat Sheet
+Concept	Key point
+Static variable	One shared value for the type
+Static method	Called without creating an object
+Static property	Property belonging to the type
+Static class	Cannot be instantiated
+Static constructor	Runs automatically once for the type
+Instance member	Belongs to an object
+Static method → instance member	❌ Direct access
+Instance method → static member	✅
+Main()	Traditionally static entry point
+The interview answer
+
+If asked:
+
+"What is static in C#?"
+
+You can say:
+
+"static means a member belongs to the type itself rather than to a particular object. Static members can be accessed using the class name without creating an instance. Static methods cannot directly access instance members because they don't have an object context."

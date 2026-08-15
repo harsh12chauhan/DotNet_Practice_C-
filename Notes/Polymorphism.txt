@@ -1,0 +1,98 @@
+Polymorphism
+
+You have already used polymorphism without explicitly realizing it:
+
+Employee employee = new Developer(
+    1,
+    "Harsh",
+    40000,
+    "C#"
+);
+
+employee.DisplayInfo();
+
+This is polymorphism.
+
+The word literally means:
+
+One interface/reference, many forms.
+
+1. Two types you need to know
+Compile-time polymorphism
+
+Usually achieved through method overloading.
+
+You already learned this:
+
+Calculate(int a, int b)
+Calculate(double a, double b)
+Calculate(int a, int b, int c)
+
+The compiler decides which method to call.
+
+Compile time
+     ↓
+Which overload?
+Runtime polymorphism
+
+Achieved through method overriding.
+
+Base:
+
+class Animal
+{
+    public virtual void MakeSound()
+    {
+        Console.WriteLine("Animal sound");
+    }
+}
+
+Derived:
+
+class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Bark");
+    }
+}
+
+Then:
+
+Animal animal = new Dog();
+
+animal.MakeSound();
+
+Output:
+
+Bark
+
+Although the reference is Animal, the actual object is Dog.
+
+Reference type → Animal
+Actual object  → Dog
+                     ↓
+             Dog.MakeSound()
+
+This is runtime polymorphism.
+
+2. virtual + override
+
+Remember this pair:
+
+// Parent
+public virtual void Display()
+{
+}
+// Child
+public override void Display()
+{
+}
+
+virtual says:
+
+"Derived classes are allowed to replace this behavior."
+
+override says:
+
+"I am replacing the base implementation."

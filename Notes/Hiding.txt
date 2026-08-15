@@ -1,0 +1,520 @@
+ Hiding — new
+
+This is different from overriding.
+
+Parent:
+
+class Animal
+{
+    public void Speak()
+    {
+        Console.WriteLine("Animal");
+    }
+}
+
+Child:
+
+class Dog : Animal
+{
+    public new void Speak()
+    {
+        Console.WriteLine("Dog");
+    }
+}
+
+Here Dog.Speak() is hiding the parent's method, not overriding it.
+
+This behaves differently:
+
+Dog dog = new Dog();
+dog.Speak();
+
+Output:
+
+Dog
+
+But:
+
+Animal animal = new Dog();
+animal.Speak();
+
+Output:
+
+Animal
+
+That's because there is no virtual/override polymorphism.
+
+Remember:
+override → polymorphic behavior
+new      → hides parent's member
+
+
+Detailed explination ==============================
+
+
+still not understand hiding ? explain in more detail
+
+Absolutely. Hiding is one of those C# concepts that feels confusing until you see exactly what the compiler is doing. Let's slow down and build it from the basics.
+
+1. First: What does "hiding" mean?
+
+Suppose you have a parent class:
+
+class Employee
+{
+    public void Work()
+    {
+        Console.WriteLine("Employee is working");
+    }
+}
+
+And a child class:
+
+class Developer : Employee
+{
+    public new void Work()
+    {
+        Console.WriteLine("Developer is coding");
+    }
+}
+
+The new means:
+
+"Developer has a member with the same name as the inherited member, and I intentionally want to hide the parent member."
+
+So now there are actually two Work() methods:
+
+Employee
+   └── Work() → "Employee is working"
+
+Developer
+   └── Work() → "Developer is coding"
+
+The Developer version doesn't override the Employee version.
+
+It simply hides it.
+
+2. The easiest way to understand it
+
+Create a Developer object:
+
+Developer developer = new Developer();
+
+Then:
+
+developer.Work();
+
+Output:
+
+Developer is coding
+
+Why?
+
+Because developer is a Developer reference, so C# sees the Developer.Work() member.
+
+Now:
+
+Employee employee = new Developer();
+
+Notice something important:
+
+Reference type → Employee
+Actual object  → Developer
+
+Then:
+
+employee.Work();
+
+Output:
+
+Employee is working
+Why?
+
+Because Work() is not virtual.
+
+The compiler looks at the reference type:
+
+employee
+   ↓
+Employee
+   ↓
+Employee.Work()
+
+It doesn't perform runtime overriding.
+
+3. Compare this with override
+
+Now change the parent:
+
+class Employee
+{
+    public virtual void Work()
+    {
+        Console.WriteLine("Employee is working");
+    }
+}
+
+And child:
+
+class Developer : Employee
+{
+    public override void Work()
+    {
+        Console.WriteLine("Developer is coding");
+    }
+}
+
+Now:
+
+Employee employee = new Developer();
+
+employee.Work();
+
+Output:
+
+Developer is coding
+
+Because Work() is now overridden.
+
+4. The critical difference
+Hiding
+class Employee
+{
+    public void Work()
+    {
+        Console.WriteLine("Employee");
+    }
+}
+
+class Developer : Employee
+{
+    public new void Work()
+    {
+        Console.WriteLine("Developer");
+    }
+}
+Developer d = new Developer();
+d.Work();
+
+→ Developer
+
+But:
+
+Employee e = new Developer();
+e.Work();
+
+→ Employee
+
+Overriding
+class Employee
+{
+    public virtual void Work()
+    {
+        Console.WriteLine("Employee");
+    }
+}
+
+class Developer : Employee
+{
+    public override void Work()
+    {
+        Console.WriteLine("Developer");
+    }
+}
+
+Now:
+
+Developer d = new Developer();
+d.Work();
+
+→ Developer
+
+And:
+
+Employee e = new Developer();
+e.Work();
+
+→ Developer
+
+That's the big difference.
+
+5. Think of the reference as a "remote control"
+
+This analogy helps.
+
+Suppose:
+
+Employee employee = new Developer();
+
+The object is:
+
+Developer
+
+But your remote control only knows about:
+
+Employee
+With hiding
+
+The Employee remote says:
+
+"Call Employee.Work()"
+
+So:
+
+Employee reference
+       ↓
+Employee.Work()
+
+Even though the object underneath is a Developer.
+
+With overriding
+
+The Employee reference says:
+
+"Call Work()"
+
+and runtime checks:
+
+"What actual object is this?"
+       ↓
+Developer
+       ↓
+Developer.Work()
+
+That's runtime polymorphism.
+
+6. Why does new exist?
+
+You might wonder:
+
+Why would I ever want hiding instead of overriding?
+
+Sometimes the child intentionally wants to provide a member with the same name but not participate in polymorphic overriding.
+
+Example:
+
+class Printer
+{
+    public void Print()
+    {
+        Console.WriteLine("Printing document");
+    }
+}
+
+class PhotoPrinter : Printer
+{
+    public new void Print()
+    {
+        Console.WriteLine("Printing photo");
+    }
+}
+
+You're saying:
+
+PhotoPrinter has its own meaning of Print(), but I don't want this to be an overridden polymorphic implementation.
+
+It's less common than overriding, but you will encounter it in existing code.
+
+7. What happens if you don't write new?
+
+Interesting point.
+
+You could technically write:
+
+class Developer : Employee
+{
+    public void Work()
+    {
+        Console.WriteLine("Developer");
+    }
+}
+
+C# will warn you that you're hiding the inherited member.
+
+Something like:
+
+warning: 'Developer.Work()' hides inherited member 'Employee.Work()'
+
+You can explicitly tell the compiler:
+
+public new void Work()
+
+You're basically saying:
+
+"Yes, I know I'm hiding it. This is intentional."
+
+So new here is not creating an object.
+
+It is telling the compiler:
+
+This member intentionally hides the inherited member.
+
+8. new has two completely different uses
+
+This is VERY important.
+
+new for creating an object
+Developer developer = new Developer();
+
+Here:
+
+new → creates an object
+new for hiding
+public new void Work()
+
+Here:
+
+new → hides inherited member
+
+Same keyword, completely different meaning based on context.
+
+9. Hiding properties works too
+
+It's not only methods.
+
+Parent:
+
+class Employee
+{
+    public string Name { get; set; }
+}
+
+Child:
+
+class Developer : Employee
+{
+    public new string Name { get; set; }
+}
+
+Now there are effectively two Name properties:
+
+Employee.Name
+Developer.Name
+
+Again, which one you access depends on the reference type.
+
+10. Static members can also be hidden
+
+This is another place where hiding appears.
+
+class Parent
+{
+    public static void Show()
+    {
+        Console.WriteLine("Parent");
+    }
+}
+
+class Child : Parent
+{
+    public new static void Show()
+    {
+        Console.WriteLine("Child");
+    }
+}
+
+Then:
+
+Parent.Show();
+
+→ Parent
+
+Child.Show();
+
+→ Child
+
+Static members don't participate in normal runtime overriding.
+
+11. Hiding vs overriding — memorize this
+	Hiding	Overriding
+Keyword	new	override
+Base method needs virtual?	❌	✅
+Runtime polymorphism?	❌	✅
+Reference type matters?	Yes	Usually no for virtual dispatch
+Same member name?	✅	✅
+Base and child have separate implementations?	✅	Conceptually one virtual member with derived implementation
+Example
+
+Hiding:
+
+Employee e = new Developer();
+e.Work();
+
+→ Employee.Work()
+
+Overriding:
+
+Employee e = new Developer();
+e.Work();
+
+→ Developer.Work()
+
+12. One final example
+
+Look at these two programs.
+
+Program A — hiding
+class Animal
+{
+    public void Speak()
+    {
+        Console.WriteLine("Animal");
+    }
+}
+
+class Dog : Animal
+{
+    public new void Speak()
+    {
+        Console.WriteLine("Dog");
+    }
+}
+
+Animal a = new Dog();
+Dog d = new Dog();
+
+a.Speak();
+d.Speak();
+
+Output:
+
+Animal
+Dog
+
+Why?
+
+a → Animal reference → Animal.Speak()
+d → Dog reference    → Dog.Speak()
+Program B — overriding
+class Animal
+{
+    public virtual void Speak()
+    {
+        Console.WriteLine("Animal");
+    }
+}
+
+class Dog : Animal
+{
+    public override void Speak()
+    {
+        Console.WriteLine("Dog");
+    }
+}
+
+Animal a = new Dog();
+Dog d = new Dog();
+
+a.Speak();
+d.Speak();
+
+Output:
+
+Dog
+Dog
+
+Because both references ultimately point to a Dog object and Speak() participates in virtual dispatch.
+
+🧠 The one sentence to remember
+
+Hiding (new) chooses the member based on the reference type, while overriding (virtual + override) allows runtime polymorphism based on the actual object type.

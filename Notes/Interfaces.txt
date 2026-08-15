@@ -1,0 +1,606 @@
+C# Interfaces
+
+You've already seen abstract, so the easiest way to understand an interface is:
+
+An interface defines a contract: "If you implement me, you must provide these capabilities."
+
+Think:
+
+Interface = WHAT
+Class     = HOW
+1. Basic interface
+interface IEmployee
+{
+    void Work();
+}
+
+A class implements it using ::
+
+class Developer : IEmployee
+{
+    public void Work()
+    {
+        Console.WriteLine("Developer is coding");
+    }
+}
+
+Then:
+
+Developer developer = new Developer();
+developer.Work();
+2. Interface cannot normally be instantiated
+
+You cannot do:
+
+IEmployee employee = new IEmployee(); // ❌
+
+But you can have an interface reference:
+
+IEmployee employee = new Developer(); // ✅
+
+This is similar to:
+
+Employee employee = new Developer();
+
+which you already learned with inheritance.
+
+3. Interface reference → polymorphism
+
+Suppose:
+
+interface IEmployee
+{
+    void Work();
+}
+
+Then:
+
+class Developer : IEmployee
+{
+    public void Work()
+    {
+        Console.WriteLine("Coding");
+    }
+}
+
+class Manager : IEmployee
+{
+    public void Work()
+    {
+        Console.WriteLine("Managing");
+    }
+}
+
+Now:
+
+IEmployee employee = new Developer();
+employee.Work();
+
+→
+
+Coding
+
+And:
+
+IEmployee employee = new Manager();
+employee.Work();
+
+→
+
+Managing
+
+This is polymorphism through an interface.
+
+4. Why do we need interfaces?
+
+Imagine:
+
+Developer
+Manager
+Printer
+Robot
+PaymentService
+EmailService
+
+These classes may have completely different purposes.
+
+But perhaps several of them can:
+
+Work()
+
+You don't necessarily want:
+
+Robot IS-A Employee ❌
+Printer IS-A Employee ❌
+
+Instead:
+
+Developer ─────┐
+Manager ───────┤
+Robot ─────────┼──→ IWorkable
+Printer ───────┘
+
+The interface describes a capability.
+
+5. Multiple interfaces
+
+This is one of the biggest advantages.
+
+A class can inherit from one class but implement multiple interfaces.
+
+class Developer : Employee, IWorkable, IReportable
+{
+}
+
+Here:
+
+Employee       → base class
+IWorkable      → interface
+IReportable    → interface
+
+This is allowed:
+
+class Developer : Employee, IWorkable, IReportable
+
+But this isn't:
+
+class Developer : Employee, Manager // ❌
+
+because C# doesn't support multiple class inheritance.
+
+6. Interface properties
+
+Interfaces can define properties:
+
+interface IEmployee
+{
+    int Id { get; }
+    string Name { get; set; }
+
+    void Work();
+}
+
+Implementation:
+
+class Developer : IEmployee
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public void Work()
+    {
+        Console.WriteLine("Coding");
+    }
+}
+
+The implementing class must satisfy the contract.
+
+7. Interface methods are usually public
+
+When you implement:
+
+interface IEmployee
+{
+    void Work();
+}
+
+you normally write:
+
+public void Work()
+{
+}
+
+You can't make the normal implementation:
+
+private void Work() // ❌
+
+because then it wouldn't satisfy the public interface contract.
+
+8. Explicit interface implementation ⭐
+
+This is an important interview topic.
+
+Suppose:
+
+interface IDeveloper
+{
+    void Work();
+}
+
+interface IManager
+{
+    void Work();
+}
+
+Both have:
+
+Work()
+
+but you want different implementations.
+
+You can do:
+
+class Employee : IDeveloper, IManager
+{
+    void IDeveloper.Work()
+    {
+        Console.WriteLine("Developer work");
+    }
+
+    void IManager.Work()
+    {
+        Console.WriteLine("Manager work");
+    }
+}
+
+Now:
+
+IDeveloper developer = new Employee();
+developer.Work();
+
+→
+
+Developer work
+
+And:
+
+IManager manager = new Employee();
+manager.Work();
+
+→
+
+Manager work
+
+This is called explicit interface implementation.
+
+Notice:
+
+Employee employee = new Employee();
+
+employee.Work(); // ❌
+
+You can't directly call those explicit implementations through the class reference.
+
+9. Interface vs Abstract Class
+
+🔥 Very common interview question.
+
+Abstract class
+
+Use when classes have a strong IS-A relationship and you want to share common implementation/state.
+
+abstract class Employee
+{
+    public string Name { get; set; }
+
+    public void Login()
+    {
+        Console.WriteLine("Login");
+    }
+
+    public abstract void Work();
+}
+Interface
+
+Use to define a contract/capability that potentially unrelated classes can implement.
+
+interface IWorkable
+{
+    void Work();
+}
+Quick comparison
+	Abstract Class	Interface
+Can instantiate directly?	❌	❌
+Can have abstract methods?	✅	✅
+Can have implementation?	✅	✅ modern C#
+Can have instance fields?	✅	❌
+Can have constructors?	✅	❌
+Multiple inheritance?	❌	Multiple interfaces ✅
+Main purpose	Shared base/state/behavior	Contract/capability
+Don't memorize "interface has no implementation"
+
+That used to be a common simplification, but modern C# interfaces can have default implementations, static members, etc.
+
+For interviews, know the modern rule.
+
+10. Interface naming convention
+
+C# convention:
+
+interface IWorkable
+{
+}
+
+Start with:
+
+I
+
+Examples:
+
+IEnumerable
+IDisposable
+IComparable
+IRepository
+ILogger
+IPaymentService
+11. Interfaces + SOLID
+
+This is where interfaces become extremely important for you.
+
+Suppose you write:
+
+class OrderService
+{
+    private PaymentService paymentService;
+
+    public OrderService()
+    {
+        paymentService = new PaymentService();
+    }
+}
+
+Now OrderService is tightly coupled to PaymentService.
+
+Instead:
+
+interface IPaymentService
+{
+    void Pay(double amount);
+}
+class PaymentService : IPaymentService
+{
+    public void Pay(double amount)
+    {
+        Console.WriteLine($"Paid {amount}");
+    }
+}
+
+Then:
+
+class OrderService
+{
+    private readonly IPaymentService paymentService;
+
+    public OrderService(IPaymentService paymentService)
+    {
+        this.paymentService = paymentService;
+    }
+}
+
+Now OrderService depends on the abstraction, not the concrete implementation.
+
+This is going to become very important when we get to Dependency Injection + SOLID.
+
+🧠 Your interview mental model
+
+Remember:
+
+Abstract Class
+      ↓
+"What are you?"
+      ↓
+IS-A relationship
+      ↓
+Shared state + shared behavior + required behavior
+
+
+Interface
+      ↓
+"What can you do?"
+      ↓
+CAPABILITY / CONTRACT
+      ↓
+Multiple classes can implement it
+
+Example:
+
+Employee
+   ↓
+Developer
+   ↓
+IS-A Employee
+
+Developer
+   ↓
+IWorkable
+   ↓
+CAN WORK
+
+Developer
+   ↓
+ICodeable
+   ↓
+CAN CODE
+
+That's the core of interfaces.
+
+⚡ Before the task, one important interview trap
+
+Don't say:
+
+"Interface is 100% abstract and cannot have implementation."
+
+That's outdated for modern C#.
+
+Better answer:
+
+"An interface defines a contract that implementing types must satisfy. Modern C# interfaces can also contain default implementations and other members, but they're primarily used to define abstractions and capabilities."
+
+That's a much stronger interview answer.
+
+
+should i have to write Id and Name also i developer class  ?
+
+Yes — if your interface declares Id and Name, the implementing class must provide an implementation for them.
+
+For example:
+
+interface IEmployee
+{
+    int Id { get; }
+    string Name { get; set; }
+
+    void Work();
+}
+
+Then Developer must satisfy that contract:
+
+class Developer : IEmployee
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public void Work()
+    {
+        Console.WriteLine("Developer is coding");
+    }
+}
+But here's an important point
+
+If Developer already inherits Id and Name from a base class that satisfies the interface, you don't necessarily need to write them again.
+
+For example:
+
+abstract class Employee
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+interface IEmployee
+{
+    int Id { get; }
+    string Name { get; }
+}
+
+class Developer : Employee, IEmployee
+{
+    public void Work()
+    {
+        Console.WriteLine("Coding");
+    }
+}
+
+This can satisfy the interface because Developer inherits the required properties from Employee.
+
+So in your current learning context:
+
+Interface says:
+"I need Id, Name and Work"
+
+        ↓
+
+Developer checks:
+
+Id   → inherited from Employee ✅
+Name → inherited from Employee ✅
+Work → Developer implements it ✅
+
+        ↓
+
+Developer satisfies IEmployee
+One thing to watch
+
+The accessors must be compatible.
+
+If interface says:
+
+string Name { get; set; }
+
+then an inherited property with only:
+
+public string Name { get; }
+
+would not satisfy the set requirement.
+
+So you don't blindly recreate interface properties in every implementing class. First check whether the class already gets a suitable implementation through inheritance.
+
+For your interviews, remember:
+
+An interface is a contract, not necessarily a requirement to duplicate every property/method in the implementing class. If the class already inherits a valid implementation, that can satisfy the contract.
+
+by default access specifiers of interfaces are public ?
+
+Yes, but there are two different things to distinguish: the interface itself and its members.
+
+1. Interface members are public by default
+
+For:
+
+interface IEmployee
+{
+    void Work();
+    string Name { get; set; }
+}
+
+Work() and Name are effectively public interface members.
+
+So this:
+
+interface IEmployee
+{
+    void Work();
+}
+
+is effectively saying:
+
+interface IEmployee
+{
+    public void Work();
+}
+
+You can think of the interface as saying:
+
+"Anyone implementing me must provide this public contract."
+
+2. The interface itself is different
+
+If you write:
+
+interface IEmployee
+{
+}
+
+at namespace level, its default accessibility is internal, not public.
+
+So:
+
+interface IEmployee
+{
+    void Work();
+}
+
+is effectively:
+
+internal interface IEmployee
+{
+    void Work();
+}
+
+If you want other assemblies/projects to access it:
+
+public interface IEmployee
+{
+    void Work();
+}
+🧠 Remember
+interface itself
+    ↓
+default: internal
+
+interface members
+    ↓
+default: public
+
+So in your example:
+
+interface IEmployee
+{
+    void Work();
+}
+IEmployee → internal by default
+Work() → public by default
+
+That's a good C# interview detail to remember.

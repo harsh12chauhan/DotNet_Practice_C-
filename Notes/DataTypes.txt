@@ -1,0 +1,850 @@
+C# Data Types — Fast Interview Revision
+
+C# data types can broadly be understood as:
+
+C# Data Types
+│
+├── Value Types
+│   ├── Integral
+│   ├── Floating-point
+│   ├── Decimal
+│   ├── Boolean
+│   ├── Character
+│   ├── struct
+│   ├── enum
+│   └── nullable value types
+│
+└── Reference Types
+    ├── class
+    ├── interface
+    ├── array
+    ├── delegate
+    ├── string
+    └── object
+1. Integral types
+
+Used for whole numbers.
+
+Type	Size	Example
+byte	1 byte	byte x = 10;
+sbyte	1 byte	sbyte x = -10;
+short	2 bytes	short x = 100;
+ushort	2 bytes	ushort x = 100;
+int	4 bytes	int x = 100;
+uint	4 bytes	uint x = 100;
+long	8 bytes	long x = 100;
+ulong	8 bytes	ulong x = 100;
+
+Most commonly you'll use:
+
+int
+long
+int
+int age = 25;
+
+Range:
+
+-2,147,483,648
+to
+ 2,147,483,647
+uint
+
+Unsigned means no negative values:
+
+uint count = 100;
+2. Floating-point types
+
+For numbers containing fractions.
+
+float
+float temperature = 36.5f;
+
+Notice the f.
+
+float x = 10.5f;
+
+Without f, 10.5 is treated as a double.
+
+double
+double salary = 45000.50;
+
+double is the common choice for general floating-point calculations.
+
+decimal
+decimal price = 99999.99m;
+
+Notice the m.
+
+decimal provides higher decimal precision and is commonly preferred for financial/money calculations.
+
+For example:
+
+decimal salary = 50000.50m;
+
+For financial applications, prefer:
+
+decimal
+
+rather than:
+
+double
+3. bool
+
+Only:
+
+bool isActive = true;
+bool isLoggedIn = false;
+
+C# does not treat 0 and 1 as boolean values.
+
+This is invalid:
+
+bool x = 1; // ❌
+4. char
+
+A single UTF-16 character:
+
+char grade = 'A';
+
+Single quotes:
+
+'A'
+
+not:
+
+"A"
+5. string
+
+A sequence of characters:
+
+string name = "Harsh";
+
+Double quotes are used.
+
+char    → 'A'
+string  → "A"
+Important
+
+Although string behaves in many ways like a value, string is a reference type.
+
+Also, strings are immutable.
+
+For example:
+
+string name = "Harsh";
+
+name = "Amit";
+
+You're not modifying the original "Harsh" string object; you're assigning another string reference.
+
+6. object
+
+object is the ultimate base type of all C# types.
+
+object x = 10;
+object y = "Hello";
+object z = new Employee();
+
+This is possible because everything ultimately derives from:
+
+System.Object
+
+This connects to your earlier question about System.Object.
+
+7. var
+
+var is NOT a datatype.
+
+This is an important interview point.
+
+var age = 25;
+
+The compiler determines:
+
+age → int
+
+And:
+
+var name = "Harsh";
+
+becomes:
+
+name → string
+
+The type is determined at compile time.
+
+This is called implicit typing.
+
+You cannot do:
+
+var x; // ❌
+
+because the compiler needs to determine the type immediately.
+
+8. dynamic
+
+dynamic is different from var.
+
+dynamic x = 10;
+
+x = "Hello";
+x = true;
+
+The variable can hold different types during runtime.
+
+The compiler performs much less type checking for operations on dynamic.
+
+For example:
+
+dynamic value = "Hello";
+
+Console.WriteLine(value.Length); // works
+
+But:
+
+dynamic value = 10;
+
+Console.WriteLine(value.Length); // runtime error
+
+So:
+
+var
+ ↓
+type determined at compile time
+
+dynamic
+ ↓
+binding/checking happens at runtime
+9. const
+
+const means the value must be known at compile time and cannot change.
+
+const double Pi = 3.14159;
+
+Then:
+
+Pi = 4; // ❌
+
+Constants are implicitly static, so you access them through the type:
+
+Math.PI
+
+Conceptually:
+
+const
+ ↓
+compile-time constant
+ ↓
+cannot change
+
+A const is implicitly static.
+
+10. readonly
+
+You have already encountered fields/properties, so this distinction is important.
+
+class Employee
+{
+    private readonly int id;
+
+    public Employee(int id)
+    {
+        this.id = id;
+    }
+}
+
+readonly means the field can be assigned:
+
+where it's declared, or
+inside a constructor
+
+but after construction it cannot normally be changed.
+
+Compare:
+
+const
+ ↓
+compile-time constant
+
+readonly
+ ↓
+runtime value
+ ↓
+can be assigned during construction
+11. struct
+
+A struct is a value type.
+
+struct Point
+{
+    public int X;
+    public int Y;
+}
+
+Then:
+
+Point p1 = new Point();
+p1.X = 10;
+
+Point p2 = p1;
+p2.X = 20;
+
+p1.X remains:
+
+10
+
+because p2 received a copy.
+
+This connects directly to your previous value/reference types topic.
+
+12. enum
+
+Used when you have a fixed set of named values.
+
+enum Status
+{
+    Pending,
+    Approved,
+    Rejected
+}
+
+Then:
+
+Status status = Status.Approved;
+
+Very common in real applications.
+
+Instead of:
+
+string status = "Approved";
+
+you can use:
+
+Status status = Status.Approved;
+
+This provides stronger type safety.
+
+13. Nullable value types
+
+Normally:
+
+int age = null; // ❌
+
+because int is a value type.
+
+But:
+
+int? age = null; // ✅
+
+int? is shorthand for:
+
+Nullable<int>
+
+Very common when working with databases because a database column might contain NULL.
+
+Example:
+
+int? employeeAge = null;
+
+if (employeeAge.HasValue)
+{
+    Console.WriteLine(employeeAge.Value);
+}
+⭐ The types you should know for interviews
+
+Don't waste time memorizing every obscure type.
+
+Know these very well:
+
+int
+long
+float
+double
+decimal
+bool
+char
+string
+object
+var
+dynamic
+const
+readonly
+struct
+enum
+nullable types
+
+And understand:
+
+Value vs Reference
+Compile-time vs Runtime typing
+decimal vs double
+var vs dynamic
+const vs readonly
+class vs struct
+🔥 Important interview traps
+var vs dynamic
+var
+→ compile-time type inference
+
+dynamic
+→ runtime binding
+double vs decimal
+double
+→ general floating-point calculations
+
+decimal
+→ financial/monetary calculations
+const vs readonly
+const
+→ compile-time constant
+
+readonly
+→ can be assigned during construction
+string vs char
+char
+→ one character
+
+string
+→ sequence of characters
+class vs struct
+class
+→ reference type
+
+struct
+→ value type
+One thing I DON'T want you to memorize incorrectly
+
+Don't say:
+
+"int is stored on the stack and class objects are stored on the heap."
+
+That's an oversimplification, just like we discussed earlier.
+
+Instead say:
+
+"int is a value type, while a class is a reference type. Their storage location depends on context and runtime behavior."
+
+That's a much better interview answer.
+
+Status
+
+Data Types → Revision complete ✅
+
+# boxing and unboxing
+
+simple : 
+unboxing => object/reference type to value type conversion 
+object reference
+      ↓
+  unboxing
+      ↓
+   int value
+
+=> int num = 20;
+=> object obj = num;  // boxing
+
+boxing => value type to object/reference type conversion 
+int value
+   ↓
+boxing
+   ↓
+object reference
+=> int newNum = (int)obj; //unboxing
+
+Yes — this is a much better set of answers. You're at about 8.5/10 now. The remaining gaps are exactly the kind of things worth fixing before interviews.
+
+1. var, dynamic, object — ✅ with one correction
+
+Your understanding is good.
+
+Don't call var an "implicit datatype." var is a keyword for implicit type inference.
+
+var x = 10;
+
+The compiler determines:
+
+x → int
+
+and after compilation, x is still strongly typed as int.
+
+dynamic
+dynamic x = 10;
+x = "hello";
+x = 20.5;
+
+The compiler allows operations to be resolved at runtime.
+
+object
+object x = 10;
+
+object is System.Object, the ultimate base type in C#.
+
+So remember:
+
+var     → compiler infers type
+dynamic → runtime binding
+object  → base type
+2. double vs decimal — let's fix this
+
+You said:
+
+double has very large decimal places while decimal has 1 or controlled
+
+Not quite.
+
+Both can represent fractional numbers, but their precision and representation are different.
+
+double
+
+Uses binary floating-point representation.
+
+double x = 0.1 + 0.2;
+
+Console.WriteLine(x);
+
+You may get:
+
+0.30000000000000004
+
+This happens because many decimal fractions cannot be represented exactly in binary floating point.
+
+decimal
+
+Designed for high-precision decimal arithmetic.
+
+decimal x = 0.1m + 0.2m;
+
+Console.WriteLine(x);
+
+Result:
+
+0.3
+
+Therefore:
+
+double  → scientific/engineering/general floating-point calculations
+decimal → financial/monetary calculations
+
+Don't think:
+
+double = more decimal places
+
+Instead think:
+
+double and decimal use different numerical representations and have different precision characteristics.
+
+3. const vs readonly — ✅ Very good
+
+Your answer is essentially correct.
+
+One improvement:
+
+const
+public const string CompanyName = "ABC";
+
+A const is implicitly static.
+
+Therefore:
+
+Company.CompanyName
+
+not:
+
+company.CompanyName
+
+It is a compile-time constant.
+
+readonly
+public readonly int FoundedYear;
+
+public Company(int year)
+{
+    FoundedYear = year;
+}
+
+Each object can have a different value:
+
+Company c1 = new Company(2010);
+Company c2 = new Company(2020);
+
+So:
+
+c1.FoundedYear → 2010
+c2.FoundedYear → 2020
+
+That's an important difference.
+
+4. Boxing / Unboxing — your concept needs one correction
+
+You said:
+
+putting small type like int inside very large type like object
+
+Don't think of it as small → large.
+
+The real concept is:
+
+Converting a value type to object (or another compatible interface/reference type) causes boxing.
+
+int num = 20;
+
+object obj = num;  // boxing
+
+Conceptually:
+
+int value
+   ↓
+boxing
+   ↓
+object reference
+
+Then:
+
+int newNum = (int)obj;
+
+is:
+
+object reference
+      ↓
+  unboxing
+      ↓
+   int value
+Why does boxing exist?
+
+Because sometimes an API needs a reference type, but you have a value type.
+
+For example:
+
+int number = 10;
+object obj = number;
+
+Now the integer can be treated as an object.
+
+Important
+
+Boxing can have performance overhead because it involves creating an object representation of the value.
+
+You don't need to obsess over this yet, but know the interview phrase:
+
+Boxing converts a value type to a reference type; unboxing extracts the value type from the boxed object.
+
+5. Nullable — ✅ Correct
+
+Exactly:
+
+int? age = null;
+
+is shorthand for:
+
+Nullable<int> age = null;
+
+This is useful when a value type needs to represent "no value."
+
+Very common with database data.
+
+6. Parse vs TryParse — ✅ Correct
+
+You understand this well.
+
+int.Parse("hello");
+
+→ throws FormatException.
+
+Whereas:
+
+int.TryParse("hello", out int result);
+
+→ returns:
+
+false
+
+and gives the output variable a default value (0 for int).
+
+Interview answer
+
+Parse throws an exception when conversion fails, while TryParse returns a Boolean indicating success and avoids an exception for normal invalid input.
+
+7. Implicit vs Explicit conversion ⭐
+
+This is the biggest remaining gap.
+
+Implicit conversion
+
+The compiler can safely convert one type to another without you explicitly telling it to.
+
+Example:
+
+int x = 100;
+
+double y = x;
+
+Why is this allowed?
+
+Because every int value can be represented by a double without the kind of narrowing that requires an explicit cast.
+
+int
+ ↓
+double
+
+No cast required.
+
+Explicit conversion
+
+When the conversion could lose information, you have to explicitly tell C#:
+
+"I know what I'm doing. Convert it."
+
+Example:
+
+double x = 10.5;
+
+int y = (int)x;
+
+The (int) is an explicit cast.
+
+Result:
+
+y = 10
+
+The .5 is lost.
+
+Another example:
+
+double x = 999999999999;
+
+int y = (int)x;
+
+There could be loss of range/precision, so C# requires explicit conversion.
+
+🧠 The easiest way to remember
+
+Think:
+
+Widening conversion → usually implicit
+int → long → float → double
+
+Generally, the destination can represent a broader range of values.
+
+Narrowing conversion → usually explicit
+double → int
+long → int
+
+Potential data loss → C# makes you explicitly cast.
+
+One important distinction
+
+Don't confuse casting with parsing.
+
+Casting
+
+You're converting between compatible types:
+
+double d = 10.5;
+int i = (int)d;
+Parsing
+
+You're converting text into a value:
+
+string text = "100";
+int i = int.Parse(text);
+
+So:
+
+double → int
+     ↓
+   casting
+
+
+string → int
+     ↓
+   parsing
+
+That's a very useful interview distinction.
+
+Your DateTime question
+
+For your employee:
+
+string dateInput = "01/04/2025";
+
+Use:
+
+DateTime joiningDate = DateTime.Parse(dateInput);
+
+If you know the exact format:
+
+DateTime joiningDate = DateTime.ParseExact(
+    dateInput,
+    "dd/MM/yyyy",
+    null
+);
+
+For user input, prefer:
+
+DateTime joiningDate;
+
+bool success = DateTime.TryParseExact(
+    dateInput,
+    "dd/MM/yyyy",
+    null,
+    System.Globalization.DateTimeStyles.None,
+    out joiningDate
+);
+
+Then:
+
+Console.WriteLine(joiningDate);
+🔥 Final interview cheat sheet
+
+Keep this mental model:
+
+var
+→ compiler infers type
+
+dynamic
+→ runtime binding
+
+object
+→ System.Object / ultimate base type
+
+double
+→ binary floating-point
+
+decimal
+→ high-precision decimal arithmetic / money
+
+const
+→ compile-time constant
+→ implicitly static
+
+readonly
+→ assigned at declaration/constructor
+→ each object can have its own value
+
+boxing
+→ value type → object/reference
+
+unboxing
+→ object → value type
+
+nullable
+→ value type that can represent null
+
+Parse
+→ invalid input → exception
+
+TryParse
+→ invalid input → false
+
+implicit conversion
+→ compiler can perform automatically
+
+explicit conversion
+→ programmer must request conversion/cast
+
+casting
+→ type → compatible type
+
+parsing
+→ string/text → value
+Data Types status: ✅ Covered

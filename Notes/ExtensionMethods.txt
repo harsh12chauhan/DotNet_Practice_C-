@@ -1,0 +1,495 @@
+Extension Methods in C#
+
+An extension method allows you to add a new method to an existing type without modifying the original class/type, inheriting from it, or creating a derived class.
+
+For example, suppose C# already has string, and you want to add your own method:
+
+string name = "harsh";
+
+
+name.IsLongName();
+
+There is no IsLongName() method built into string.
+
+With an extension method, we can create it ourselves.
+
+1. Basic Extension Method
+
+An extension method must satisfy these important rules:
+
+It must be inside a static class.
+The extension method itself must be static.
+The first parameter must use the this keyword.
+The first parameter specifies which type we are extending.
+
+Example:
+
+public static class StringExtensions
+{
+    public static bool IsLongName(this string text)
+    {
+        return text.Length > 5;
+    }
+}
+
+Now:
+
+string name = "Harsh";
+
+
+bool result = name.IsLongName();
+
+
+Console.WriteLine(result);
+
+Output:
+
+false
+
+Because "Harsh" has only 5 characters.
+
+2. What's actually happening?
+
+This:
+
+name.IsLongName();
+
+looks like we're calling a method belonging to string.
+
+But internally, the compiler treats it approximately like:
+
+StringExtensions.IsLongName(name);
+
+The this keyword tells the compiler:
+
+"This method extends the string type."
+
+So:
+
+public static bool IsLongName(this string text)
+
+means:
+
+Create an extension method for string.
+
+3. Another Example — int
+
+Suppose we want to add a method to int.
+
+public static class IntExtensions
+{
+    public static bool IsEven(this int number)
+    {
+        return number % 2 == 0;
+    }
+}
+
+Usage:
+
+int number = 10;
+
+
+Console.WriteLine(number.IsEven());
+
+Output:
+
+True
+
+Internally:
+
+IntExtensions.IsEven(number);
+4. Extension Method with Parameters
+
+The first parameter is the object being extended.
+
+Additional parameters can be passed normally.
+
+public static class StringExtensions
+{
+    public static bool ContainsWord(this string text, string word)
+    {
+        return text.Contains(word);
+    }
+}
+
+Usage:
+
+string message = "Hello Harsh";
+
+
+bool result = message.ContainsWord("Harsh");
+
+
+Console.WriteLine(result);
+
+Output:
+
+True
+
+Conceptually:
+
+StringExtensions.ContainsWord(message, "Harsh");
+5. Extension Method for a Class You Created
+
+This is particularly important for understanding the concept.
+
+Suppose you have:
+
+public class Employee
+{
+    public string Name { get; set; }
+    public double Salary { get; set; }
+}
+
+You don't want to modify Employee.
+
+You can create:
+
+public static class EmployeeExtensions
+{
+    public static bool IsHighSalary(this Employee employee)
+    {
+        return employee.Salary > 100000;
+    }
+}
+
+Now:
+
+Employee emp = new Employee
+{
+    Name = "Harsh",
+    Salary = 150000
+};
+
+
+Console.WriteLine(emp.IsHighSalary());
+
+Output:
+
+True
+
+Again, this:
+
+emp.IsHighSalary();
+
+is essentially:
+
+EmployeeExtensions.IsHighSalary(emp);
+6. Extension Method for a Collection
+
+This is where you'll see extension methods everywhere in LINQ.
+
+For example:
+
+List<int> numbers = new List<int>
+{
+    10, 15, 20, 25, 30
+};
+
+You can write your own extension:
+
+public static class ListExtensions
+{
+    public static int CountEven(this List<int> numbers)
+    {
+        int count = 0;
+
+
+        foreach (int number in numbers)
+        {
+            if (number % 2 == 0)
+            {
+                count++;
+            }
+        }
+
+
+        return count;
+    }
+}
+
+Usage:
+
+int result = numbers.CountEven();
+
+
+Console.WriteLine(result);
+
+Output:
+
+3
+
+Because:
+
+10 → even
+15 → odd
+20 → even
+25 → odd
+30 → even
+7. Extension Methods and LINQ
+
+This is very important for your next topic: LINQ.
+
+Methods like:
+
+Where()
+Select()
+OrderBy()
+First()
+FirstOrDefault()
+Count()
+Any()
+
+are largely provided through extension methods.
+
+For example:
+
+List<int> numbers = new List<int>
+{
+    10, 15, 20, 25, 30
+};
+
+
+var result = numbers.Where(x => x > 20);
+
+Where() is an extension method.
+
+Conceptually:
+
+Enumerable.Where(numbers, x => x > 20);
+
+The actual implementation is more sophisticated, but this is the important mental model.
+
+That's why LINQ can work with:
+
+List<T>
+Array
+IEnumerable<T>
+
+and many other collection types.
+
+8. Important: Extension Method Doesn't Actually Modify the Class
+
+Suppose:
+
+public class Employee
+{
+    public string Name { get; set; }
+}
+
+And:
+
+public static class EmployeeExtensions
+{
+    public static void PrintName(this Employee employee)
+    {
+        Console.WriteLine(employee.Name);
+    }
+}
+
+It may look like PrintName() has been added to Employee.
+
+But it hasn't.
+
+The Employee class itself remains unchanged.
+
+The compiler provides special syntax that lets us call:
+
+employee.PrintName();
+
+instead of:
+
+EmployeeExtensions.PrintName(employee);
+
+So extension methods are basically syntactic convenience.
+
+9. Extension Method Rules — Interview Question
+
+Remember these:
+
+Rule 1 — Static class
+public static class MyExtensions
+{
+}
+Rule 2 — Static method
+public static void MyMethod(...)
+{
+}
+Rule 3 — First parameter uses this
+public static void MyMethod(this string text)
+Rule 4 — First parameter determines the type being extended
+this string text
+
+means:
+
+Extension method for string.
+
+While:
+
+this Employee employee
+
+means:
+
+Extension method for Employee.
+
+10. Extension Method vs Normal Method
+Normal method
+public class Employee
+{
+    public void Work()
+    {
+        Console.WriteLine("Working");
+    }
+}
+
+Call:
+
+Employee emp = new Employee();
+
+
+emp.Work();
+
+Work() actually belongs to Employee.
+
+Extension method
+public static class EmployeeExtensions
+{
+    public static void WorkExtra(this Employee employee)
+    {
+        Console.WriteLine("Extra work");
+    }
+}
+
+Call:
+
+emp.WorkExtra();
+
+But WorkExtra() doesn't actually belong to Employee.
+
+It belongs to:
+
+EmployeeExtensions
+11. What if the original class already has the method?
+
+This is a common interview question.
+
+Suppose:
+
+public class Employee
+{
+    public void Print()
+    {
+        Console.WriteLine("Employee Print");
+    }
+}
+
+And extension:
+
+public static class EmployeeExtensions
+{
+    public static void Print(this Employee employee)
+    {
+        Console.WriteLine("Extension Print");
+    }
+}
+
+Now:
+
+Employee emp = new Employee();
+
+
+emp.Print();
+
+Output:
+
+Employee Print
+
+The real instance method takes priority over the extension method.
+
+This is an important rule.
+
+12. Why use Extension Methods?
+
+They are useful when:
+
+You don't own the original class.
+You cannot modify the class.
+You don't want inheritance just to add utility functionality.
+You want cleaner/reusable helper methods.
+You want fluent syntax.
+
+For example:
+
+string name = "harsh";
+
+
+name.IsLongName();
+
+is much cleaner than:
+
+StringHelper.IsLongName(name);
+13. Real-world example
+
+Imagine you have:
+
+List<Employee> employees;
+
+You could create an extension:
+
+public static class EmployeeExtensions
+{
+    public static double GetAverageSalary(
+        this List<Employee> employees)
+    {
+        double total = 0;
+
+
+        foreach (Employee emp in employees)
+        {
+            total += emp.Salary;
+        }
+
+
+        return total / employees.Count;
+    }
+}
+
+Then:
+
+double average = employees.GetAverageSalary();
+
+This makes your code much more readable.
+
+🔥 Interview Definition
+
+If the interviewer asks:
+
+"What is an extension method in C#?"
+
+A good answer:
+
+An extension method is a static method that allows us to add functionality to an existing type without modifying the original type or using inheritance. It is defined inside a static class, and its first parameter uses the this keyword to specify the type being extended.
+
+And if they ask:
+
+"How does it work internally?"
+
+Say:
+
+The compiler treats the extension method call as a static method call. For example, employee.PrintName() is essentially translated to EmployeeExtensions.PrintName(employee).
+
+🧠 Remember this pattern
+
+Whenever you see:
+
+public static class XExtensions
+{
+    public static ReturnType MethodName(this X object)
+    {
+        // logic
+    }
+}
+
+Think:
+
+"I am adding a method-like syntax to X without modifying X."

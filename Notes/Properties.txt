@@ -1,0 +1,393 @@
+C# Properties — Revision
+
+If you already know fields, classes, and objects, think of a property as a controlled way of exposing data from a class.
+
+1. Field vs Property
+
+A field is simply a variable inside a class:
+
+public class Student
+{
+    public string name;
+    public int age;
+}
+
+You can access it directly:
+
+Student student = new Student();
+
+student.name = "Harsh";
+student.age = 22;
+
+A property looks similar:
+
+public class Student
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+Usage:
+
+Student student = new Student();
+
+student.Name = "Harsh";
+student.Age = 22;
+
+So you might ask:
+
+Why use a property instead of a field?
+
+That's where properties become important.
+
+2. The basic property
+public string Name { get; set; }
+
+There are three important parts:
+
+public       string       Name       { get; set; }
+  │             │           │              │
+access       data type    property      accessors
+modifier                   name
+get
+
+Controls reading:
+
+string name = student.Name;
+set
+
+Controls writing:
+
+student.Name = "Harsh";
+
+So:
+
+public string Name { get; set; }
+
+means:
+
+Anyone who can access the property can read and write it.
+
+3. Why properties are useful
+
+Suppose you have:
+
+public class BankAccount
+{
+    public double Balance;
+}
+
+Anyone can do:
+
+account.Balance = -50000;
+
+That's probably not what you want.
+
+With a property:
+
+public class BankAccount
+{
+    public double Balance
+    {
+        get;
+        set;
+    }
+}
+
+You can later add validation:
+
+public class BankAccount
+{
+    private double balance;
+
+    public double Balance
+    {
+        get
+        {
+            return balance;
+        }
+        set
+        {
+            if (value >= 0)
+            {
+                balance = value;
+            }
+        }
+    }
+}
+
+Now:
+
+account.Balance = -5000;
+
+can be prevented.
+
+4. What is value?
+
+This is an important C# concept.
+
+Inside a property's set accessor:
+
+set
+{
+    balance = value;
+}
+
+value represents the value being assigned.
+
+For example:
+
+account.Balance = 5000;
+
+Inside the setter:
+
+value = 5000
+
+So:
+
+balance = value;
+
+becomes conceptually:
+
+balance = 5000;
+5. Auto-implemented properties
+
+You'll see this everywhere in .NET:
+
+public string Name { get; set; }
+
+This is called an auto-implemented property.
+
+You don't explicitly declare the backing field.
+
+The compiler provides the necessary storage behind the scenes.
+
+For example:
+
+public class Employee
+{
+    public string Name { get; set; }
+    public int Salary { get; set; }
+}
+
+This is perfectly normal modern C#.
+
+You'll see properties like this constantly in:
+
+ASP.NET Core models
+DTOs
+Entity Framework entities
+Configuration classes
+API request/response models
+6. Read-only property
+
+You can have:
+
+public string Name { get; }
+
+Now outside code can read it:
+
+Console.WriteLine(student.Name);
+
+But cannot do:
+
+student.Name = "Harsh"; // ❌
+
+This is useful when the value shouldn't be changed externally.
+
+7. private set
+
+This is very important.
+
+public int Id { get; private set; }
+
+This means:
+
+get     → public
+set     → private
+
+So:
+
+Console.WriteLine(employee.Id); // ✅
+
+But:
+
+employee.Id = 10; // ❌
+
+The class itself can still modify it.
+
+public class Employee
+{
+    public int Id { get; private set; }
+
+    public Employee(int id)
+    {
+        Id = id;
+    }
+}
+
+This pattern is extremely common in real applications.
+
+8. Property with validation
+
+You can make the setter more intelligent:
+
+public class Employee
+{
+    private int salary;
+
+    public int Salary
+    {
+        get
+        {
+            return salary;
+        }
+
+        set
+        {
+            if (value >= 0)
+            {
+                salary = value;
+            }
+        }
+    }
+}
+
+Now the property isn't just storing data.
+
+It's controlling how that data can be changed.
+
+9. Expression-bodied property
+
+You'll also encounter:
+
+public class Rectangle
+{
+    public double Length { get; set; }
+    public double Width { get; set; }
+
+    public double Area => Length * Width;
+}
+
+Notice:
+
+public double Area => Length * Width;
+
+This is a computed/read-only property.
+
+You don't store Area.
+
+It is calculated whenever you access it:
+
+Console.WriteLine(rectangle.Area);
+10. Property vs method
+
+This is a common interview question.
+
+Suppose:
+
+public double Area => Length * Width;
+
+versus:
+
+public double CalculateArea()
+{
+    return Length * Width;
+}
+
+Both can calculate something.
+
+Generally:
+
+Property
+
+Use when you're representing a characteristic/state:
+
+employee.Name
+employee.Salary
+rectangle.Area
+student.Age
+Method
+
+Use when you're representing an action/operation:
+
+employee.CalculateSalary()
+employee.Promote()
+rectangle.CalculateSomething()
+student.Enroll()
+
+A useful mental model:
+
+Property = "What is it?"
+Method = "What does it do?"
+
+11. Access modifiers can differ for get/set
+
+This is another important C# feature:
+
+public string Name
+{
+    get;
+    private set;
+}
+
+But you cannot make both accessors more restrictive than the property itself.
+
+For example, this is invalid:
+
+private string Name
+{
+    public get;
+    private set;
+}
+
+The accessor cannot be more accessible than the property.
+
+12. init — modern C#
+
+You may also encounter:
+
+public string Name { get; init; }
+
+This means the property can be assigned during object initialization:
+
+Student student = new Student
+{
+    Name = "Harsh"
+};
+
+But later:
+
+student.Name = "Rahul"; // ❌
+
+init is useful for creating objects whose state shouldn't change after initialization.
+
+We'll cover this more deeply later.
+
+🧠 Interview Cheat Sheet
+Property	Meaning
+{ get; set; }	Read + write
+{ get; }	Read-only externally
+{ get; private set; }	Read publicly, modify only inside class
+{ get; init; }	Set during initialization, not later
+get	Reading
+set	Writing
+value	Value being assigned in setter
+Auto-property	Compiler provides backing storage
+Computed property	Value calculated when accessed
+⭐ Most important patterns to remember
+public string Name { get; set; }
+public int Id { get; private set; }
+public double Area => Length * Width;
+
+And for interviews:
+
+A property provides controlled access to an object's data and can encapsulate reading, writing, validation, or computed values.
+
+One thing we'll deliberately practice
+
+For your assignment, I don't just want you to write:
+
+public string Name { get; set; }
+
+I want you to practice when to use private set, validation, backing fields, and computed properties, because that's where properties become useful rather than just syntax.

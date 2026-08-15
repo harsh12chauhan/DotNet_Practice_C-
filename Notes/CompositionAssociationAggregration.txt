@@ -1,0 +1,225 @@
+what is difference between composition and association
+
+Yes — this is an important distinction, and it becomes much easier if you think about ownership/lifetime.
+
+Both composition and association represent relationships between objects, but the strength of the relationship is different.
+
+1. Association — "knows about / uses"
+
+Association means:
+
+Object A is related to Object B, but neither necessarily owns the other.
+
+Example:
+
+class Teacher
+{
+    public string Name { get; set; }
+}
+
+class Student
+{
+    public void LearnFrom(Teacher teacher)
+    {
+        Console.WriteLine($"Learning from {teacher.Name}");
+    }
+}
+
+Here:
+
+Student ───────→ Teacher
+       knows/uses
+
+The Student can use a Teacher, but the Student doesn't own the Teacher.
+
+The teacher can exist independently:
+
+Teacher teacher = new Teacher();
+
+Student student = new Student();
+
+student.LearnFrom(teacher);
+
+If student is destroyed, the teacher still exists.
+
+That's association.
+
+2. Composition — "owns/contains"
+
+Composition is a stronger relationship.
+
+Object A owns/contains Object B, and B's lifetime is generally tied to A.
+
+Your previous example:
+
+class Department
+{
+    private Manager manager;
+
+    public Department(Manager manager)
+    {
+        this.manager = manager;
+    }
+}
+
+Conceptually:
+
+Department
+    │
+    └──── Manager
+         owned/contained
+
+But there's an important nuance: your exact implementation is actually closer to aggregation/association, because you pass an already-created Manager into Department.
+
+Manager manager = new Manager(...);
+
+Department department =
+    new Department(manager);
+
+The manager existed before the department.
+
+So the Department isn't really creating/owning its manager.
+
+3. A stronger composition example
+
+If Department creates the object internally:
+
+class Department
+{
+    private Manager manager;
+
+    public Department()
+    {
+        manager = new Manager(1, "Atul", 80000, 4);
+    }
+}
+
+Now:
+
+Department
+    │
+    └── Manager
+
+The Manager is created as part of the Department.
+
+Conceptually:
+
+Department created
+       ↓
+Manager created
+       ↓
+Department contains Manager
+
+This is much closer to composition.
+
+4. Easy real-world examples
+Association
+Doctor ───── Patient
+
+A doctor knows/treats patients.
+
+But:
+
+Doctor can exist without patient.
+Patient can exist without doctor.
+
+So:
+
+Association
+
+Composition
+House
+ ├── Room
+ ├── Kitchen
+ └── Bathroom
+
+A house is composed of rooms.
+
+The rooms are considered parts of that house.
+
+So:
+
+Composition
+
+5. There is actually a third term: Aggregation
+
+This is where things get confusing.
+
+Object relationships are often explained as:
+
+Association
+    │
+    ├── Aggregation
+    │
+    └── Composition
+Association
+
+Weak/general relationship:
+
+Teacher ─── Student
+Aggregation
+
+"Has-a", but objects can exist independently:
+
+Department ◇──── Employee
+
+Employee can exist without Department.
+
+Composition
+
+Strong "has-a":
+
+House ◆──── Room
+
+Room's conceptual lifetime belongs to the House.
+
+🧠 The easiest interview distinction
+
+Ask yourself:
+
+"If I destroy A, should B logically continue to exist independently?"
+
+Yes → Association/Aggregation
+University ─── Student
+
+Student can exist after university object disappears.
+
+No → Composition
+House ─── Room
+
+Room is conceptually part of that particular house.
+
+In C# specifically
+
+Don't get too obsessed with the distinction based solely on whether you use new inside the class.
+
+For example:
+
+class Car
+{
+    private Engine engine;
+
+    public Car(Engine engine)
+    {
+        this.engine = engine;
+    }
+}
+
+This is commonly described as composition in software design, even though the Engine is injected from outside.
+
+The key is the design relationship and ownership/lifecycle semantics, not simply where new appears.
+
+Your mental model
+Association
+    ↓
+"I know/use you"
+
+Aggregation
+    ↓
+"I have you, but you can live independently"
+
+Composition
+    ↓
+"You are a part of me"
+
+For your current C# interview preparation, understanding Composition vs Association at this level is enough. The distinction between aggregation and composition becomes especially useful when you start discussing SOLID, dependency injection, and system design.

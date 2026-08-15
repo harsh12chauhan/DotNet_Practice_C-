@@ -1,0 +1,756 @@
+# Method overloading =======================
+
+void Test(int x)
+{
+}
+
+void Test(long x)
+{
+}
+
+which is called if Test(10)?
+Test(int x), Because 10 is normally treated as an int literal.
+But, long number = 10; Test(number); will call => Test(long x);
+
+Method overloading => same method name + different parameter list, resolved at compile time.
+Return type alone cannot create an overload.
+
+# Property ==================================
+
+Property	Meaning
+{ get; set; }	Read + write
+{ get; }	Read-only externally
+{ get; private set; }	Read publicly, modify only inside class
+{ get; init; }	Set during initialization, not later
+
+get	Reading
+set	Writing
+value	Value being assigned in setter
+Auto-property	Compiler provides backing storage
+Computed property	Value calculated when accessed
+
+⭐ Most important patterns to remember
+public string Name { get; set; }
+public int Id { get; private set; }
+public double Area => Length * Width;
+
+Property => A property provides controlled access to an object's data and can encapsulate reading, writing, validation, or computed values.
+
+
+Quick table
+Combination		Overload allowed?
+int vs ref int		✅
+int vs out int		✅
+int vs in int		❌
+ref int vs out int	❌
+ref int vs in int	❌
+out int vs in int	❌
+
+# Static ==================================
+
+Concept	Key point
+Static variable -	One shared value for the type
+Static method -	Called without creating an object
+Static property - Property belonging to the type
+Static class- Cannot be instantiated
+Static constructor-	Runs automatically once for the type
+Instance member-	Belongs to an object
+Static method → instance- member	❌ Direct access
+Instance method → static- member	✅
+Main() - Traditionally static entry point
+
+Static => static means a member belongs to the type itself rather than to a particular object. Static members can be accessed using the class name without creating an instance. Static methods cannot directly access instance members because they don't have an object context."
+
+# Constructor ==================================
+
+if you make a ctor private then, object of that class is not created.
+
+Interview: what to do if want to create a class who's instance cannot be create? ans: make class static
+follow up question: what if I don't want to use static? and make ctor private.
+Why would we do this? and: One common use is controlling object creation, such as certain singleton/factory patterns.
+We can not create an object of abstract class also;
+
+What happens if I define a parameterized constructor but don't define a parameterless constructor?
+The compiler won't provide the parameterless constructor automatically, so new Employee() will result in a compilation error.
+
+Constructor => A constructor is a special member of a class that is automatically invoked when an object is created. It has the same name as the class and doesn't have a return type. Constructors are commonly used to initialize the object's state. C# supports constructor overloading and constructor chaining.
+
+
+Should every class have a parameterless constructor?
+No. A parameterless constructor should be provided when creating an object without initialization data is valid. If certain values are required for the object to be in a valid state, a parameterized constructor can enforce those requirements.
+
+One constructor
+      │
+      └── : this(...)  → same class
+          OR
+          : base(...)  → parent class
+
+:this(...) :base(...) ❌
+
+
+# Inheritance ==================================
+
+Does C# support multiple inheritance? => C# does not support multiple inheritance of classes, but it supports implementing multiple interfaces.
+
+Why can this work? Employee emp = new Developer(...);
+Because Developer is an Employee.
+
+Which method executes?
+emp.DisplayInfo();
+Developer.DisplayInfo() because the method is overridden and dispatch is determined at runtime.
+
+What does virtual mean?
+It allows a derived class to override the base implementation.
+
+What does override mean?
+It provides a new implementation of a virtual/abstract base member.
+
+What does base.DisplayInfo() do?
+It explicitly calls the base class implementation.
+
+What does base(...) in a constructor do?
+It calls a constructor of the base class.
+
+🧠 Very important hierarchy
+Keep this distinction in your head:
+
+Namespace
+   │
+   ├── Class
+   │    ├── Instance methods
+   │    ├── Static methods
+   │    └── Properties
+   │
+   ├── Static class
+   │    └── Static members
+   │
+   ├── Struct
+   │
+   ├── Interface
+   │
+   └── Enum
+
+A namespace isn't a class.
+A class isn't necessarily static.
+A static class isn't a method.
+And System.Object is a class, not a method.
+
+
+What is System.Object? => System.Object is the root base class of the .NET type hierarchy. Every C# class ultimately derives from it, either directly or indirectly. object is the C# alias for System.Object.
+
+Inheritance=> Mechanism by which a derived class acquires accessible members and behavior from a base class.
+Syntax:
+class Dog : Animal{}
+
+Base constructor:
+public Dog(string name) : base(name){}
+
+Overriding:
+
+// Base
+public virtual void MakeSound() { }
+
+// Derived
+public override void MakeSound() { }
+
+Key access modifiers:
+
+public     → accessible broadly
+private    → containing class
+protected  → containing + derived classes
+
+Multiple class inheritance: ❌ Not supported in C#.
+
+Every class ultimately derives from: System.Object.
+
+# polymorphism, abstract, hiding, upcasting and downcasting, composition vs inheritace , object initializer ==================================
+
+Overloading => Compile-time polymorphism
+
+virtual + override => Runtime polymorphism
+
+abstract => Must be implemented by derived class
+
+new => Hide base member
+
+Employee e = new Developer() => Upcasting
+Developer d = (Developer)e => Downcasting
+
+e is Developer => Type checking
+
+e as Developer => Safe-ish conversion returning null
+
+Inheritance => IS-A
+
+Composition => HAS-A
+
+Most important distinctions
+this(...) → another constructor in same class
+base(...) → constructor in base class
+
+virtual   → can override
+override  → overrides
+abstract  → must implement
+new       → hides
+
+Inheritance → IS-A
+Composition → HAS-A
+
+This is enough theory for now. Don't spend more time reading it.
+
+Can an abstract class have fields? => Yes. Just not abstract fields
+
+Hiding => Hiding (new) chooses the member based on the reference type, while overriding (virtual + override) allows runtime polymorphism based on the actual object type.
+
+
+# Object Initialization ========================================
+
+Object initializer => new Employee { Name = "Harsh" }
+
+Remember this for interviews
+var emp = new Employee(1, "Harsh", 40000)
+{
+    Department = "IT"
+};
+
+Think:
+
+1. new Employee(...)       → constructor
+2. Department = "IT"       → object initializer
+3. emp is ready
+
+So your original understanding:
+
+"It's directly initializing properties/data members only"
+
+is partially correct.
+
+It does initialize the specified members directly after construction, but the constructor is still called first.
+
+And yes, the syntax is different from manually doing:
+
+var emp = new Employee();
+
+emp.Name = "Harsh";
+emp.Salary = 40000;
+
+but the object-initializer syntax is essentially a convenient, compact way of doing those assignments after the constructor has executed.
+
+
+
+# Composition Association Aggreation ===============================================
+
+
+Object relationships are often explained as:
+
+Association
+    │
+    ├── Aggregation
+    │
+    └── Composition
+Association
+
+Weak/general relationship:
+
+Teacher ─── Student
+Aggregation
+
+"Has-a", but objects can exist independently:
+
+Department ◇──── Employee
+
+Employee can exist without Department.
+
+Composition
+
+Strong "has-a":
+
+House ◆──── Room
+
+Room's conceptual lifetime belongs to the House.
+
+🧠 The easiest interview distinction
+
+Ask yourself:
+
+"If I destroy A, should B logically continue to exist independently?"
+
+Yes → Association/Aggregation
+University ─── Student
+
+Student can exist after university object disappears.
+
+No → Composition
+House ─── Room
+
+Room is conceptually part of that particular house.
+
+
+# Interfaces ===============================================
+
+Explicit interface implementation ⭐
+
+This is an important interview topic.
+
+Suppose:
+
+interface IDeveloper
+{
+    void Work();
+}
+
+interface IManager
+{
+    void Work();
+}
+
+Both have:
+
+Work()
+
+but you want different implementations.
+
+You can do:
+
+class Employee : IDeveloper, IManager
+{
+    void IDeveloper.Work()
+    {
+        Console.WriteLine("Developer work");
+    }
+
+    void IManager.Work()
+    {
+        Console.WriteLine("Manager work");
+    }
+}
+
+Now:
+
+IDeveloper developer = new Employee();
+developer.Work();
+
+→
+
+Developer work
+
+And:
+
+IManager manager = new Employee();
+manager.Work();
+
+→
+
+Manager work
+
+This is called explicit interface implementation.
+
+Notice:
+
+Employee employee = new Employee();
+
+employee.Work(); // ❌
+
+You can't directly call those explicit implementations through the class reference.
+
+9. Interface vs Abstract Class
+
+🔥 Very common interview question.
+
+Abstract class
+
+Use when classes have a strong IS-A relationship and you want to share common implementation/state.
+
+abstract class Employee
+{
+    public string Name { get; set; }
+
+    public void Login()
+    {
+        Console.WriteLine("Login");
+    }
+
+    public abstract void Work();
+}
+Interface
+
+Use to define a contract/capability that potentially unrelated classes can implement.
+
+interface IWorkable
+{
+    void Work();
+}
+Quick comparison
+	Abstract Class	Interface
+Can instantiate directly?	❌	❌
+Can have abstract methods?	✅	✅
+Can have implementation?	✅	✅ modern C#
+Can have instance fields?	✅	❌
+Can have constructors?	✅	❌
+Multiple inheritance?	❌	Multiple interfaces ✅
+Main purpose	Shared base/state/behavior	Contract/capability
+Don't memorize "interface has no implementation"
+
+That used to be a common simplification, but modern C# interfaces can have default implementations, static members, etc.
+
+For interviews, know the modern rule.
+
+
+Your interview mental model
+
+Remember:
+
+Abstract Class
+      ↓
+"What are you?"
+      ↓
+IS-A relationship
+      ↓
+Shared state + shared behavior + required behavior
+
+
+Interface
+      ↓
+"What can you do?"
+      ↓
+CAPABILITY / CONTRACT
+      ↓
+Multiple classes can implement it
+
+Example:
+
+Employee
+   ↓
+Developer
+   ↓
+IS-A Employee
+
+Developer
+   ↓
+IWorkable
+   ↓
+CAN WORK
+
+Developer
+   ↓
+ICodeable
+   ↓
+CAN CODE
+
+That's the core of interfaces, Before the task, one important interview trap
+Don't say: Interface is 100% abstract and cannot have implementation. That's outdated for modern C#.
+
+Better answer:
+Interface => An interface defines a contract that implementing types must satisfy. Modern C# interfaces can also contain default implementations and other members, but they're primarily used to define abstractions and capabilities.
+
+# Value Types vs Reference Types ======================================
+
+The three together
+
+Memorize this table:
+
+Keyword	Passed			Must initialize before?	Method can modify?
+Nothing	By value		Yes			Only its copy
+ref	By reference		✅ Yes			✅ Yes
+out	By reference		❌ No			✅ Must assign
+in	By reference		✅ Yes			❌ No
+
+Think:
+
+ref → "Here is my variable. You can change it."
+
+out → "Give me a value through this variable."
+
+in  → "Read my variable, but don't change it."
+⚠️ One important correction to a common mental model
+
+Don't think:
+
+Value type     → Stack
+Reference type → Heap
+
+as an absolute rule.
+
+That's an oversimplification.
+
+The actual distinction is about value semantics vs reference semantics. Where a particular variable/object is physically stored is more complicated and depends on context/runtime implementation.
+
+For your interview, focus first on the semantics, not "stack = value, heap = reference."
+
+⚠️ Almost correct — important wording
+
+You said:
+
+int x = pass by value
+ref int x = pass by reference
+
+Correct. But remember the bigger C# rule: C# parameters are passed by value by default. ref explicitly changes that to pass by reference.
+
+The important thing you should now remember is:
+
+Value type
+    ↓
+Contains the value
+
+Reference type
+    ↓
+Contains a reference to an object
+
+
+ref
+    ↓
+Reference to the variable itself
+
+in
+    ↓
+Read-only reference to the variable
+    ↓
+BUT if that variable contains a reference,
+the object itself isn't automatically immutable
+
+out
+    ↓
+Method must provide a value
+
+That last in distinction is an excellent interview-level detail.
+
+Quick table
+Combination	Overload allowed?
+int vs ref int	✅
+int vs out int	✅
+int vs in int	❌
+ref int vs out int	❌
+ref int vs in int	❌
+out int vs in int	❌
+
+# Datatypes ==================================================
+
+Know these very well:
+
+int
+long
+float
+double
+decimal
+bool
+char
+string
+object
+var
+dynamic
+const
+readonly
+struct
+enum
+nullable types
+
+And understand:
+
+Value vs Reference
+Compile-time vs Runtime typing
+decimal vs double
+var vs dynamic
+const vs readonly
+class vs struct
+🔥 Important interview traps
+var vs dynamic
+var
+→ compile-time type inference
+
+dynamic
+→ runtime binding
+double vs decimal
+double
+→ general floating-point calculations
+
+decimal
+→ financial/monetary calculations
+const vs readonly
+const
+→ compile-time constant
+
+readonly
+→ can be assigned during construction
+
+# const is implicitly static.
+
+string vs char
+char
+→ one character
+
+string
+→ sequence of characters
+class vs struct
+class
+→ reference type
+
+struct
+→ value type
+One thing I DON'T want you to memorize incorrectly
+
+Don't say:
+
+"int is stored on the stack and class objects are stored on the heap."
+
+That's an oversimplification, just like we discussed earlier.
+
+Instead say:
+
+"int is a value type, while a class is a reference type. Their storage location depends on context and runtime behavior."
+
+That's a much better interview answer.
+
+# boxing and unboxing
+
+simple : 
+unboxing => object/reference type to value type conversion 
+object reference
+      ↓
+  unboxing
+      ↓
+   int value
+
+=> int num = 20;
+=> object obj = num;  // boxing
+
+boxing => value type to object/reference type conversion 
+int value
+   ↓
+boxing
+   ↓
+object reference
+=> int newNum = (int)obj; //unboxing
+
+Final interview cheat sheet
+
+Keep this mental model:
+
+var
+→ compiler infers type
+
+dynamic
+→ runtime binding
+
+object
+→ System.Object / ultimate base type
+
+double
+→ binary floating-point
+
+decimal
+→ high-precision decimal arithmetic / money
+
+const
+→ compile-time constant
+→ implicitly static
+
+readonly
+→ assigned at declaration/constructor
+→ each object can have its own value
+
+boxing
+→ value type → object/reference
+
+unboxing
+→ object → value type
+
+nullable
+→ value type that can represent null
+
+Parse
+→ invalid input → exception
+
+TryParse
+→ invalid input → false
+
+implicit conversion
+→ compiler can perform automatically
+
+explicit conversion
+→ programmer must request conversion/cast
+
+casting
+→ type → compatible type
+
+parsing
+→ string/text → value
+
+# Extension methods =================================================
+
+If the interviewer asks:
+
+"What is an extension method in C#?"
+
+A good answer:
+
+An extension method is a static method that allows us to add functionality to an existing type without modifying the original type or using inheritance. It is defined inside a static class, and its first parameter uses the this keyword to specify the type being extended.
+
+And if they ask:
+
+"How does it work internally?"
+
+Say:
+
+The compiler treats the extension method call as a static method call. For example, employee.PrintName() is essentially translated to EmployeeExtensions.PrintName(employee).
+
+🧠 Remember this pattern
+
+Whenever you see:
+
+public static class XExtensions
+{
+    public static ReturnType MethodName(this X object)
+    {
+        // logic
+    }
+}
+
+Think:
+
+"I am adding a method-like syntax to X without modifying X."
+
+# Tuple and valueTuple ===============================================
+
+Q1. What is a Tuple?
+
+A Tuple is a type that allows us to group multiple values of different types into a single object.
+
+Q2. Difference between Tuple and ValueTuple?
+
+Tuple is a reference type implemented as a class, whereas ValueTuple is a value type implemented as a struct. Modern C# generally uses ValueTuple because it supports named elements, deconstruction, and more convenient syntax.
+
+Q3. How do you return multiple values from a method?
+static (int Sum, int Product) Calculate(int a, int b)
+{
+    return (a + b, a * b);
+}
+Q4. What is deconstruction?
+var (sum, product) = Calculate(10, 5);
+
+It means extracting the individual elements of a tuple into separate variables.
+
+🧠 Quick memory trick
+
+Think:
+
+Tuple
+  ↓
+Class
+  ↓
+Reference Type
+  ↓
+Older
+
+
+ValueTuple
+  ↓
+Struct
+  ↓
+Value Type
+  ↓
+Modern C#
+  ↓
+Named elements + Deconstruction
+
+For your revision, focus mainly on ValueTuple, named tuples, deconstruction, discards, and returning multiple values. These are much more useful in modern C# than the old Tuple class
+

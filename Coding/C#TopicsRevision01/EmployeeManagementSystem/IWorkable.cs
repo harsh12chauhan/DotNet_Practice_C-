@@ -1,0 +1,7 @@
+﻿namespace EmployeeManagementSystem
+{
+    internal interface IWorkable
+    {
+        void Work();
+    }
+}

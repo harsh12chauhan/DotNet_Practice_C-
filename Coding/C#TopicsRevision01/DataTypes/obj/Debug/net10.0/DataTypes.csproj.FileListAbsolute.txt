@@ -1,0 +1,15 @@
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\bin\Debug\net10.0\DataTypes.exe
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\bin\Debug\net10.0\DataTypes.deps.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\bin\Debug\net10.0\DataTypes.runtimeconfig.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\bin\Debug\net10.0\DataTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\bin\Debug\net10.0\DataTypes.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.AssemblyInfoInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.AssemblyInfo.cs
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.csproj.CoreCompileInputs.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.sourcelink.json
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\refint\DataTypes.dll
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.pdb
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\DataTypes.genruntimeconfig.cache
+C:\Users\harsh\Desktop\Dotnet\Coding\C#TopicsRevision01\DataTypes\obj\Debug\net10.0\ref\DataTypes.dll
