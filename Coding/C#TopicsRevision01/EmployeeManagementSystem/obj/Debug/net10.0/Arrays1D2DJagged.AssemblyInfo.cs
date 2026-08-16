@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Arrays1D2DJagged")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e6d883ea1fd184f93f2d76f544e355b5939e9ef2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+382fadd20e595f4f2eb2a6e6e26041836cfb4946")]
 [assembly: System.Reflection.AssemblyProductAttribute("Arrays1D2DJagged")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Arrays1D2DJagged")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
